@@ -1,8 +1,7 @@
 target
 .idea
 .idea/Arabic_QA_system.iml
-.idea/libraries/
+.idea/libraries
 .idea/workspace.xml
 1.iml
-exec/
 target/
