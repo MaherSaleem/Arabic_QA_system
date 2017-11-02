@@ -10,7 +10,9 @@ import com.AQAS.question_processessing.QuestionPreprocessing;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.logging.Logger;
 
 public class HelpersM {
@@ -48,6 +50,13 @@ public class HelpersM {
             }
         }
         return form;
+    }
+
+    public static String[] removeStringDuplicates(String [] a){
+        return new HashSet<String>(Arrays.asList(a)).toArray(new String[0]);
+    }
+    public static String[] removeStringDuplicates(ArrayList<String>  a){
+        return new HashSet<String>(a).toArray(new String[0]);
     }
 
 

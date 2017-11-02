@@ -23,18 +23,10 @@ public class Driver {
         query = QuestionPreprocessing.preProcessInput(query).get(ConfigP.Keys.NormalizedText);
         String document = QuestionPreprocessing.preProcessInput(ConfigDR.testingDoc).get(ConfigP.Keys.NormalizedText);
 
-//        String [] keyPhrases = HelpersS.getKeyPhrases(query + " و ك");
+//        String [] keyPhrases = HelpersKE.getKeyPhrases(query + " و ك");
 //        for(int i = 0; i< keyPhrases.length; i++){
 //            System.out.println( keyPhrases[i]);
 //        }
-//        double cosineSimilarity;
-
-//        System.out.println(document);
-
-
-//        HashMap<String,Double> keyPhrasesFrequencies = HelpersDR.getWordsFreqInDoc(keyPhrases,document);
-//        cosineSimilarity = HelpersDR.cosineSimilarity(query, document);
-//        System.out.println(keyPhrasesFrequencies);
 
         double documentRank = getDocumentRank(document,query);
         System.out.println("Doc rank: "+ documentRank);

@@ -80,11 +80,31 @@ public class Form {
     }
 
     public void removeIrrelevantDocuments() {
+        double relevancyThreshold = getRelevancyThreshold();
+        System.out.println("Choosen Threshold is :" + relevancyThreshold);
         for (Iterator<Document> document = documents.iterator(); document.hasNext(); ) {
-            if (document.next().overAllRank() < ConfigDR.RELEVANCY_THRESHOLD) {
+            if (document.next().overAllRank() < relevancyThreshold) {
                 document.remove();
             }
         }
+    }
+
+    private double getRelevancyThreshold(){
+
+        if (ConfigDR.THRESHOLD_SOURCE == ConfigDR.STATIC_THRESHOLD){
+            return ConfigDR.RELEVANCY_THRESHOLD;
+        }
+        else if(ConfigDR.THRESHOLD_SOURCE == ConfigDR.STATISTICAL_THRESHOLD){
+            double avg = getDocumentsRanksAvg();
+            double standardDeviation = getDocumentsRankStandardDeviation();
+            if (avg <= standardDeviation){
+                return  avg ;
+            }
+            else{
+                return avg - standardDeviation;
+            }
+        }
+        return 1;//TODO
     }
 
 
@@ -96,5 +116,21 @@ public class Form {
                 ", text='" + text + '\'' +
                 ", documents=" + documents +
                 '}';
+    }
+
+    public double getDocumentsRanksAvg() {
+        double sum = 0;
+        for (Document document: this.documents) {
+            sum += document.overAllRank();
+        }
+        return sum / this.documents.size();
+    }
+    public double getDocumentsRankStandardDeviation() {
+        double mean = getDocumentsRanksAvg();
+        double sum = 0;
+        for (Document document: this.documents) {
+            sum += Math.pow((document.overAllRank()-mean),2);
+        }
+        return Math.sqrt(sum / this.documents.size());
     }
 }

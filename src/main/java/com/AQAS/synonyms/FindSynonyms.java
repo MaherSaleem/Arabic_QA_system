@@ -1,28 +1,17 @@
 package com.AQAS.synonyms;
 
+import com.AQAS.main.HelpersM;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FindSynonyms
 {
-    private String word;
-
-    public FindSynonyms(String word) {
-        this.word = word;
-    }
-
-    public String getWord() {
-        return word;
-    }
-
-    public void setWord(String word) {
-        this.word = word;
-    }
-
-    public ArrayList<String> wordSynset(){
+   
+    public static String [] getWordSynonyms(String word){
         ArrayList<String> SynsetList = new ArrayList<>();
         AWN awn=new AWN ("src/main/java/com/AQAS/synonyms/awn.xml",false);
-        List<String> listWordId= awn.Get_List_Word_Id_From_Value(this.word);
+        List<String> listWordId= awn.Get_List_Word_Id_From_Value(word);
         for(int i = 0; i< listWordId.size();i++){
             System.out.println("Word ID: " + listWordId.get(i) +" Word Value: " + awn.Get_Word_Value_From_Word_Id(listWordId.get(i)));
             String SynsetID= awn.Get_Synset_ID_From_Word_Id(listWordId.get(i));
@@ -32,6 +21,6 @@ public class FindSynonyms
                 SynsetList.add(wordValue);
             }
         }
-        return SynsetList;
+        return HelpersM.removeStringDuplicates(SynsetList);
     }
 }
