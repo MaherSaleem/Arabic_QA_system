@@ -88,7 +88,7 @@ public class RankingEvaluation {
 
 
         System.out.println("accuracy of RELATED: "+averageForPercentOfRelated);
-        System.out.println("accuracy of TruelyRanked: "+averageForPercentOfRelated);
+        System.out.println("accuracy of TruelyRanked: "+averageForPercentOfTruelyRanked);
 
 
     }
