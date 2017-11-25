@@ -9,7 +9,7 @@ import static com.AQAS.Database.HelpersDB.props;
 
 public class Document implements Comparable<Document> {
 
-    int id;
+    public int id;
     String link;
     String text;
     int form_id;
