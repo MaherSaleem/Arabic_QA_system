@@ -1,0 +1,13 @@
+QuestionFormID
+DocumentID
+DocumentID
+DocumentID
+DocumentID
+DocumentID
+DocumentID
+DocumentID
+DocumentID
+
+
+
+NOTE: the order od the documents is the rank=> the first one has rank 1 and so on and so forth.
