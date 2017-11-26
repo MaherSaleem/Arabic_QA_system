@@ -1,5 +1,6 @@
 package com.AQAS.Database;
 
+import com.AQAS.Document_ranking.DocumentRanking;
 import com.AQAS.document_retrieval.DocumentRetrieval;
 import com.AQAS.document_retrieval.Website_Document;
 import com.AQAS.main.ConfigM;
@@ -29,9 +30,13 @@ public class HelpersDB {
                 int form_id = form.store();
                 ArrayList<Website_Document> website_documents = DocumentRetrieval.getLinksOfAllWebsitesByQuery(form.text, ConfigM.searchNumOfPages);
                 for (Website_Document website_document : website_documents) {
+                    int urlOrder = 1;
+
                     for (String url : website_document.DocumentLinks) {
                         String documentText = retrieveDocumentText(url , website_document.websiteContentSelector);
-                        Document newDoc = new Document(url, documentText);
+                        double contentRank = DocumentRanking.getDocumentRank(documentText,form.text);
+
+                        Document newDoc = new Document(url, documentText,urlOrder++,contentRank);
                         newDoc.form_id = form_id;
                         newDoc.store();
                     }

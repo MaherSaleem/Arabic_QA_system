@@ -34,6 +34,15 @@ public class Document implements Comparable<Document> {
         this.contentRank = contentRank;
     }
 
+    public Document(int id, String link, String text, int form_id, double urlRank, double contentRank) {
+        this.id = id;
+        this.link = link;
+        this.text = text;
+        this.form_id = form_id;
+        this.urlRank = urlRank;
+        this.contentRank = contentRank;
+    }
+
     public Document(int id, String link, String text, int form_id) {
         this.id = id;
         this.link = link;
@@ -46,6 +55,8 @@ public class Document implements Comparable<Document> {
             org.jsoup.nodes.Document doc = Jsoup.connect(props.getProperty("LOCAL_SERVER_IP") + "forms/document/" + this.form_id)
                     .data("text", this.text)
                     .data("link", this.link)
+                    .data("contentRank", String.valueOf(this.contentRank))
+                    .data("urlRank", String.valueOf(this.urlRank))
                     .userAgent("Mozilla")
                     .post();
             return Integer.parseInt(doc.text());

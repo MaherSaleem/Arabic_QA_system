@@ -22,6 +22,7 @@ public class Driver {
         if (ConfigM.BUILD_DB) {
             storeTestingData();
         }
+        System.exit(1);
 //        getQuestionTypeUsingSVM(new ArrayList<>(Arrays.asList(ConfigM.query)));
 
 

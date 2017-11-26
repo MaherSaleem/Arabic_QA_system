@@ -9,7 +9,7 @@ public final class ConfigM {
 
     public static final boolean VERBOS = true;
     
-    public static final boolean BUILD_DB = false;
+    public static final boolean BUILD_DB = true;
 
 
     public final static String query = "ما هي أعراض مرض السكري؟";

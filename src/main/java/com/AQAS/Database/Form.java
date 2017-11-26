@@ -57,18 +57,25 @@ public class Form {
     public ArrayList<Document> getDocuments() {
         try {
             String json = Jsoup.connect(props.getProperty("LOCAL_SERVER_IP") + "/forms/document/" + this.id).ignoreContentType(true).execute().body();
+           // System.out.println("JSON: "+json);
             JSONParser parser = new JSONParser();
             Object obj = null;
-            obj = parser.parse(json);
+            obj = parser.parse(json.toString());
 
             JSONArray jsonArray = (JSONArray) obj;
             Iterator<JSONObject> iterator = jsonArray.iterator();
             while (iterator.hasNext()) {
+
                 JSONObject tmp = iterator.next();
                 String link = (String) tmp.get("link");
                 String text = StringEscapeUtils.unescapeJava((String) tmp.get("text"));
                 int document_id = Integer.parseInt(tmp.get("id") + "");
-                this.documents.add(new Document(document_id, link, text, this.id));
+                JSONObject pivot = (JSONObject) tmp.get("pivot");
+
+                double contentRank = Double.parseDouble(pivot.get("contentRank") + "");
+                double urltRank = Double.parseDouble(pivot.get("urlRank") + "");
+                this.documents.add(new Document(document_id, link, text, this.id, urltRank, contentRank));
+
             }
 
             return this.documents;

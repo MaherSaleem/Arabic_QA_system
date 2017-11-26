@@ -7,15 +7,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+import static com.AQAS.Database.HelpersDB.intializeProb;
 import static com.AQAS.main.HelpersM.retrieveDocuments;
 
 public class RankingEvaluation {
 
 
     public static void main(String[] args) throws FileNotFoundException {
+        intializeProb();
+
         //getting the data for each questionForm and storing it in a map as FormID=>[Docs]
         ArrayList<Map<Integer, ArrayList<Integer>>> folderFormsWithRankedDocs = readEvaluationDateFromFolder();
-        System.out.println(folderFormsWithRankedDocs);
+//        System.out.println(folderFormsWithRankedDocs);
 
         double averageForPercentOfRelated = 0;
         double averageForPercentOfTruelyRanked = 0;
@@ -30,20 +33,21 @@ public class RankingEvaluation {
             for (Map.Entry<Integer, ArrayList<Integer>> formWithRankedDocs : formsWithRankedDocs.entrySet()) {//we take each list
                 //1=[5, 2, 7, 9, 1, 3]
                 numberOfForms++;
-                System.out.println(formWithRankedDocs);
+//                System.out.println(formWithRankedDocs);
                 int formID = formWithRankedDocs.getKey();
                 double percentOfRelated;
                 double percentOfTruelyRanked;
                 ArrayList<Integer> manuallyRankedDocs = formWithRankedDocs.getValue();
-                ArrayList<Integer> OurRankedDocs = formWithRankedDocs.getValue();
+                ArrayList<Integer> OurRankedDocs =new ArrayList<Integer>();
 
                 Form form = retrieveDocuments(formID);
+//                System.out.println(form.documents);
 
-                System.out.println("Before ranking: " + form);
+//                System.out.println("Before ranking: " + form);
                 Collections.sort(form.documents);// uses CompareTo in order to sort the document according to their contentRank
-                System.out.println("After ranking: " + form);
+//                System.out.println("After ranking: " + form);
                 form.removeIrrelevantDocuments();
-                System.out.println("After Remove irrelevant: " + form);
+//                System.out.println("After Remove irrelevant: " + form);
 
                 for (Document d : form.documents) {
                     OurRankedDocs.add(d.id);
@@ -58,16 +62,22 @@ public class RankingEvaluation {
                 int index = 0;
                 int numberOfCorrectRanks = 0;
                 for (int docID : OurRankedDocs) {
+                    if(index == manuallyRankedDocs.size()){
+                        break;
+                    }
                     int startMargin = index - margin < 0 ? 0 : index - margin;
-                    int endMargin = index + margin > manuallyRankedDocs.size() ? manuallyRankedDocs.size() - 1 : index + margin;
-
+                    int endMargin = index + margin > manuallyRankedDocs.size() - 1 ? manuallyRankedDocs.size() - 1 : index + margin;
+                    endMargin++;//since it is excluded.
+                    System.out.println(startMargin+" "+ endMargin);
                     List marginList = manuallyRankedDocs.subList(startMargin, endMargin);
+                    System.out.println(marginList);
 
                     if (marginList.contains(docID)) {
                         numberOfCorrectRanks++;
                     }
                     index++;
                 }
+
 
 
                 OurRankedDocs.retainAll(manuallyRankedDocs);
