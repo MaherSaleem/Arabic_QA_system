@@ -219,4 +219,10 @@ public class PassageSegmentation {
         return Arrays.stream(KeyPhrases).parallel().anyMatch(sentence::contains);
     }
 
+
+
+    public static boolean isEnoughSegment(int startIndex, int endIndex){
+        return true;
+    }
+
 }
