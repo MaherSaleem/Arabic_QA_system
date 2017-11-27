@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public class PassageSegmentation {
 
-    public static String getDocumentText(int documentId){
-        return  "مرض السكري\n" +
+        public static String getDocumentText(int documentId){
+        return
                 "Diabetes\n" +
                 "شارك\n" +
                 "غرد\n" +
