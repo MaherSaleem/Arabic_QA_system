@@ -11,6 +11,8 @@ public final class ConfigDR {
     public static final int STATIC_THRESHOLD = 1;
     public static final int STATISTICAL_THRESHOLD = 2;
     public static final int THRESHOLD_SOURCE = STATISTICAL_THRESHOLD;
+    public static int a = 2; // for keyphraseRank
+    public static int b = 3; // for cosine sim
 
     public final class Keys {
     }

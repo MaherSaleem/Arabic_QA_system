@@ -22,11 +22,12 @@ public class Driver {
         if (ConfigM.BUILD_DB) {
             storeTestingData();
         }
-        System.exit(1);
+//        System.exit(1);
 //        getQuestionTypeUsingSVM(new ArrayList<>(Arrays.asList(ConfigM.query)));
 
 
-        Form form = retrieveDocuments(ConfigM.query);
+//        Form form = retrieveDocuments(ConfigM.query);
+        Form form = retrieveDocuments("كم مده علاج الزكام");
 //
         System.out.println("Before ranking: " + form);
 
