@@ -27,6 +27,13 @@ public class Document implements Comparable<Document> {
         this.form_id = form_id;
     }
 
+    public Document(int id, int form_id, double urlRank, double contentRank) {
+        this.id = id;
+        this.form_id = form_id;
+        this.urlRank = urlRank;
+        this.contentRank = contentRank;
+    }
+
     public Document(String link, String text, double urlRank, double contentRank) {
         this.link = link;
         this.text = text;
