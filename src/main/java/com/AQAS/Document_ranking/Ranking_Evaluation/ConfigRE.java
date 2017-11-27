@@ -6,7 +6,7 @@ public final class ConfigRE {
 
     public static final String dataFolder = "/Data/";
     public static final String packagePath = ".\\src\\main\\java\\com\\AQAS\\Document_ranking\\Ranking_Evaluation";
-    public static final int EVALUATIONERRORMARGIN = 1;
+    public static final int EVALUATIONERRORMARGIN = 2;
 
 
     public final class Keys {
