@@ -86,6 +86,34 @@ public class Form {
         }
     }
 
+    public ArrayList<Document> getDocumentsForRank() {
+        try {
+            String json = Jsoup.connect(props.getProperty("LOCAL_SERVER_IP") + "/forms/documentRank/" + this.id).ignoreContentType(true).execute().body();
+            // System.out.println("JSON: "+json);
+            JSONParser parser = new JSONParser();
+            Object obj = null;
+            obj = parser.parse(json.toString());
+
+            JSONArray jsonArray = (JSONArray) obj;
+            Iterator<JSONObject> iterator = jsonArray.iterator();
+            while (iterator.hasNext()) {
+
+                JSONObject tmp = iterator.next();
+                int document_id = Integer.parseInt(tmp.get("id") + "");
+                double contentRank = Double.parseDouble(tmp.get("contentRank") + "");
+                double urlRank = Double.parseDouble(tmp.get("urlRank") + "");
+                this.documents.add(new Document(document_id, this.id, urlRank, contentRank));
+
+            }
+
+            return this.documents;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void removeIrrelevantDocuments() {
         double relevancyThreshold = getRelevancyThreshold();
         System.out.println("Choosen Threshold is :" + relevancyThreshold);

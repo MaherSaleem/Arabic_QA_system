@@ -40,7 +40,7 @@ public class RankingEvaluation {
                 ArrayList<Integer> manuallyRankedDocs = formWithRankedDocs.getValue();
                 ArrayList<Integer> OurRankedDocs =new ArrayList<Integer>();
 
-                Form form = retrieveDocuments(formID);
+                Form form = retrieveDocumentsForRank(formID);
 //                System.out.println(form.documents);
 
 //                System.out.println("Before ranking: " + form);
@@ -142,5 +142,10 @@ public class RankingEvaluation {
         return filesName;
     }
 
+    private static Form retrieveDocumentsForRank(int form_id) {
+        Form form = new Form(form_id);
+        form.getDocumentsForRank();
+        return form;
+    }
 
 }
