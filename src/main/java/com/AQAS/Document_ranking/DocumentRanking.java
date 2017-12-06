@@ -50,13 +50,17 @@ public class DocumentRanking {
             double keyPhraseFreq = keyPhrasesFrequencies.get(keyPhrase);
             int keyPhraseLength = HelpersDR.getSentenceWordsCount(keyPhrase);
             double properNameScore = getProperNameScore(keyPhrase);
+            System.out.println("KEYPHRASE: "+keyPhrase);
+            System.out.println("keyphraseFreq: "+keyPhraseFreq);
+            System.out.println("keyPhraseLength: "+keyPhraseLength);
+            System.out.println("properNameScore: "+properNameScore);
             keyPhraseScore = keyPhraseFreq  * Math.sqrt(keyPhraseLength) * properNameScore;
             keyPhrasesScore += keyPhraseScore;
         }
         if (keyPhrasesScore == 0) {
             return cosineSimilarity;
         } else {
-            return keyPhrasesScore + 5 * cosineSimilarity;
+            return ConfigDR.a * keyPhrasesScore + ConfigDR.b * cosineSimilarity;
         }
 
     }

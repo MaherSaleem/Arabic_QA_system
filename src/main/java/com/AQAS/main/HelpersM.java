@@ -5,6 +5,7 @@ import com.AQAS.Database.Form;
 import com.AQAS.Document_ranking.DocumentRanking;
 import com.AQAS.document_retrieval.DocumentRetrieval;
 import com.AQAS.document_retrieval.Website_Document;
+import com.AQAS.question_processessing.ConfigP;
 import com.AQAS.question_processessing.QuestionPreprocessing;
 
 
@@ -27,6 +28,7 @@ public class HelpersM {
     public static Form retrieveDocuments(String query_string) throws IOException {
         HashMap<String, String> out = QuestionPreprocessing.preProcessInput(query_string);
 
+        String normalizedQuery = out.get(ConfigP.Keys.NormalizedText);
         Form form = new Form(query_string);
         ArrayList<Website_Document> website_documents = DocumentRetrieval.getLinksOfAllWebsitesByQuery(form.text, ConfigM.searchNumOfPages);
 
@@ -42,7 +44,7 @@ public class HelpersM {
                     System.out.println("Link is :" + url);
                 }
                 String text = DocumentRetrieval.retrieveDocumentText(url , website_document.websiteContentSelector);
-                double contentRank = DocumentRanking.getDocumentRank(text,query_string);
+                double contentRank = DocumentRanking.getDocumentRank(text,normalizedQuery);
                 System.out.println("CR=>"+contentRank);
                 //new Logger("log");
                 form.documents.add(new Document(url, text,urlOrder++,contentRank));

@@ -43,6 +43,7 @@ public class RankingEvaluation {
                 Form form = retrieveDocumentsForRank(formID);
 //                System.out.println(form.documents);
 
+                int FormDocumentsCount = form.documents.size();
 //                System.out.println("Before ranking: " + form);
                 Collections.sort(form.documents);// uses CompareTo in order to sort the document according to their contentRank
 //                System.out.println("After ranking: " + form);
@@ -53,12 +54,12 @@ public class RankingEvaluation {
                     OurRankedDocs.add(d.id);
                 }
 
-                int ourRankedDocsOriginalSize = OurRankedDocs.size();
+                int ourRankedDocsOriginalSize = OurRankedDocs.size();//related docs
 
                 System.out.println("our ranked Docs: " + OurRankedDocs);
                 System.out.println("Manually ranked Docs: " + manuallyRankedDocs);
 
-                int margin = ConfigRE.EVALUATIONERRORMARGIN;
+                int margin = ConfigRE.EVALUATION_ERROR_MARGIN;
                 int index = 0;
                 int numberOfCorrectRanks = 0;
                 for (int docID : OurRankedDocs) {
@@ -68,9 +69,9 @@ public class RankingEvaluation {
                     int startMargin = index - margin < 0 ? 0 : index - margin;
                     int endMargin = index + margin > manuallyRankedDocs.size() - 1 ? manuallyRankedDocs.size() - 1 : index + margin;
                     endMargin++;//since it is excluded.
-                    System.out.println(startMargin+" "+ endMargin);
+//                    System.out.println(startMargin+" "+ endMargin);
                     List marginList = manuallyRankedDocs.subList(startMargin, endMargin);
-                    System.out.println(marginList);
+//                    System.out.println(marginList);
 
                     if (marginList.contains(docID)) {
                         numberOfCorrectRanks++;
@@ -81,12 +82,15 @@ public class RankingEvaluation {
 
 
                 OurRankedDocs.retainAll(manuallyRankedDocs);
-
-                int numberOfMatchedRelatedDocs = OurRankedDocs.size();
-
-                percentOfRelated = (double) numberOfMatchedRelatedDocs / (double) ourRankedDocsOriginalSize;
+//                System.out.println(OurRankedDocs);
+                int numberOfMatchedRelatedDocs = OurRankedDocs.size();//intersection
+                int numberOfManuallyRelatedDocs = manuallyRankedDocs.size();
+                double normalization = Math.max(ourRankedDocsOriginalSize,numberOfManuallyRelatedDocs);
+                Measurements measurements = new Measurements(FormDocumentsCount,
+                        numberOfManuallyRelatedDocs,ourRankedDocsOriginalSize,numberOfMatchedRelatedDocs);
+                percentOfRelated = (double) numberOfMatchedRelatedDocs / normalization;
                 percentOfTruelyRanked = (double) numberOfCorrectRanks / (double) ourRankedDocsOriginalSize;
-
+                measurements.summary();
                 averageForPercentOfRelated += percentOfRelated;
                 averageForPercentOfTruelyRanked += percentOfTruelyRanked;
 
@@ -147,5 +151,8 @@ public class RankingEvaluation {
         form.getDocumentsForRank();
         return form;
     }
+
+
+
 
 }
