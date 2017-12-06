@@ -22,6 +22,7 @@ public class Form {
     public int id;
     public int question_id;
     public String text;
+    public int question_type;
     public String normalizedText;
     public ArrayList<Document> documents = new ArrayList<Document>();
     private String [] keyPhrases = null;
@@ -171,6 +172,13 @@ public class Form {
         }
         return Math.sqrt(sum / this.documents.size());
     }
+
+
+    public void setQuestion_type(int question_type) {
+        this.question_type = question_type;
+    }
+
+
     public String[] getKeyPhrases(){
         if(this.keyPhrases == null) {
             this.keyPhrases = HelpersKE.getKeyPhrases(this.getNormalizedText());

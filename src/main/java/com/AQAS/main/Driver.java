@@ -11,6 +11,7 @@ import static com.AQAS.Database.HelpersDB.storeTestingData;
 import static com.AQAS.document_retrieval.HelpersD.closeWebDriver;
 import static com.AQAS.document_retrieval.HelpersD.openWebDriver;
 import static com.AQAS.main.HelpersM.retrieveDocuments;
+import static com.AQAS.question_type.HelpersQT.getQuestionTypeUsingSVM;
 
 public class Driver {
 
@@ -26,6 +27,9 @@ public class Driver {
 //        getQuestionTypeUsingSVM(new ArrayList<>(Arrays.asList(ConfigM.query)));
 
 
+        ArrayList<Integer> result = getQuestionTypeUsingSVM(new ArrayList<>(Arrays.asList(ConfigM.query)));
+        int questionType = result.size()>0 ? result.get(0) : -1;
+
 //        Form form = retrieveDocuments(ConfigM.query);
 
         /*
@@ -33,8 +37,9 @@ public class Driver {
         * This function will get the doucments, and will save the rank for each of them
          */
         Form form = retrieveDocuments("ما هي اعراض مرض السكري");//
-
+        form.setQuestion_type(questionType);
         form.generateFormDocumentsSegments();
+
 
         System.out.println("Before ranking: " + form);
 
