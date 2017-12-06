@@ -2,6 +2,7 @@ package com.AQAS.Database;
 
 import com.AQAS.Document_ranking.ConfigDR;
 import com.AQAS.document_retrieval.ConfigD;
+import com.AQAS.keyphrase_extraction.HelpersKE;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,7 +22,9 @@ public class Form {
     public int id;
     public int question_id;
     public String text;
+    public String normalizedText;
     public ArrayList<Document> documents = new ArrayList<Document>();
+    private String [] keyPhrases = null;
 
 
     public Form() {
@@ -167,5 +170,31 @@ public class Form {
             sum += Math.pow((document.overAllRank()-mean),2);
         }
         return Math.sqrt(sum / this.documents.size());
+    }
+    public String[] getKeyPhrases(){
+        if(this.keyPhrases == null) {
+            this.keyPhrases = HelpersKE.getKeyPhrases(this.getNormalizedText());
+        }
+        return this.keyPhrases;
+    }
+
+    /*
+   *
+   * this will generate the segments for each document in a form
+    */
+    public  void generateFormDocumentsSegments() {
+
+        String [] questionKeyPhrases = this.getKeyPhrases();
+        for (Document document : this.documents) {
+            document.generateDocumentSegments(questionKeyPhrases, null);
+        }
+    }
+
+    public void setNormalizedText(String normalizedText) {
+        this.normalizedText = normalizedText;
+    }
+
+    public String getNormalizedText() {
+        return normalizedText;
     }
 }

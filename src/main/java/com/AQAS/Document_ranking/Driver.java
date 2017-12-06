@@ -23,7 +23,7 @@ public class Driver {
         query = QuestionPreprocessing.preProcessInput(query).get(ConfigP.Keys.NormalizedText);
         String document = QuestionPreprocessing.preProcessInput(ConfigDR.testingDoc).get(ConfigP.Keys.NormalizedText);
 
-//        String [] keyPhrases = HelpersKE.getKeyPhrases(query + " و ك");
+//        String [] keyPhrases = HelpersKE.getKeyPhrases(query);
 //        for(int i = 0; i< keyPhrases.length; i++){
 //            System.out.println( keyPhrases[i]);
 //        }

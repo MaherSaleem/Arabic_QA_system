@@ -27,8 +27,15 @@ public class Driver {
 
 
 //        Form form = retrieveDocuments(ConfigM.query);
-        Form form = retrieveDocuments("كم مده علاج الزكام");
-//
+
+        /*
+        *
+        * This function will get the doucments, and will save the rank for each of them
+         */
+        Form form = retrieveDocuments("ما هي اعراض مرض السكري");//
+
+        form.generateFormDocumentsSegments();
+
         System.out.println("Before ranking: " + form);
 
         Collections.sort(form.documents);// uses CompareTo in order to sort the document according to their contentRank

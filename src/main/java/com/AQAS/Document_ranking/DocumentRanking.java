@@ -19,7 +19,7 @@ public class DocumentRanking {
 
 
 
-        String[] keyPhrases = HelpersKE.getKeyPhrases(query + " و ك");
+        String[] keyPhrases = HelpersKE.getKeyPhrases(query);
 
         if (ConfigKE.VERBOS) {
             System.out.println("Keyphrases List is :");

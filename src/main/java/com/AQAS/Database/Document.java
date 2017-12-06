@@ -1,9 +1,12 @@
 package com.AQAS.Database;
 
+import com.AQAS.passages_segmentation.ConfigPS;
+import com.AQAS.passages_segmentation.PassageSegmentation;
 import org.jsoup.Jsoup;
 
 import javax.print.Doc;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static com.AQAS.Database.HelpersDB.props;
 
@@ -15,6 +18,7 @@ public class Document implements Comparable<Document> {
     int form_id;
     double urlRank; // according to the search engine [the order of it]
     double contentRank;
+    ArrayList<String> segments = new ArrayList<>();
 
     public Document(String link, String text) {
         this.link = link;
@@ -77,6 +81,15 @@ public class Document implements Comparable<Document> {
     public double overAllRank(){
         return this.contentRank;
     }
+
+    public void setSegments(ArrayList<String> segments) {
+        this.segments = segments;
+    }
+
+    public ArrayList<String> getSegments() {
+        return segments;
+    }
+
     @Override
     public String toString() {
         return "Document{" +
@@ -97,4 +110,63 @@ public class Document implements Comparable<Document> {
         double diff = (this.contentRank- o.contentRank);
         return  diff != 0 ? ( diff >0 ? -1 : 1): 0;
     }
+
+    public  void generateDocumentSegments( String[] questionKeyPhrases, String splitRegex) {
+
+        splitRegex = splitRegex != null ? splitRegex : "[؟?!.]";
+
+
+        String documentText = this.text;
+        String documentSentences[] = documentText.split(splitRegex);
+
+
+        //just printing
+        for (String sentence : documentSentences) {
+            System.out.println(sentence);
+            System.out.println("=============================================");
+
+        }
+        System.out.println("started dividing.");
+        int state = ConfigPS.STATE_END;
+        int sentencesSize = documentSentences.length;
+        int startIndex = 0;
+        int endIndex = 0;
+        ArrayList<String> segments = new ArrayList<>();
+        for (int i = 0; i < sentencesSize; i++) {
+            String si = documentSentences[i];
+            if (PassageSegmentation.hasKeyPhrases(si, questionKeyPhrases) || i == sentencesSize - 1) {
+                if (i == sentencesSize - 1) {// case of last sentence in document
+                    state = ConfigPS.STATE_LAST_SENTENCE;
+                }
+                if (state == ConfigPS.STATE_END || state == ConfigPS.STATE_LAST_SENTENCE) {
+                    startIndex = endIndex;
+                    endIndex = i;
+                    if (!PassageSegmentation.isEnoughSegment(startIndex, endIndex) && state != ConfigPS.STATE_LAST_SENTENCE) {
+                        state = ConfigPS.STATE_NOT_ENOUGH;
+                        continue;
+                    }
+
+                } else if (state == ConfigPS.STATE_NOT_ENOUGH) {
+                    endIndex = i;
+                    state = ConfigPS.STATE_END;
+                }
+                String segmentString = "";
+                for (int j = startIndex; j < endIndex; j++) {
+                    segmentString += documentSentences[j] + ". ";
+                }
+
+                if (state == ConfigPS.STATE_LAST_SENTENCE) {
+                    int LastSegmentIndex = segments.size() - 1;
+                    segmentString += documentSentences[sentencesSize - 1];
+                    segments.set(LastSegmentIndex, segments.get(LastSegmentIndex) + ". " + segmentString);
+                } else {
+                    System.out.println(segments.size());
+                    segments.add(segmentString);
+                }
+            }
+
+        }
+        this.segments = segments;
+    }
+
 }

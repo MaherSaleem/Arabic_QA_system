@@ -30,6 +30,7 @@ public class HelpersM {
 
         String normalizedQuery = out.get(ConfigP.Keys.NormalizedText);
         Form form = new Form(query_string);
+        form.setNormalizedText(normalizedQuery);
         ArrayList<Website_Document> website_documents = DocumentRetrieval.getLinksOfAllWebsitesByQuery(form.text, ConfigM.searchNumOfPages);
 
         //printing the links
@@ -60,6 +61,11 @@ public class HelpersM {
     public static String[] removeStringDuplicates(ArrayList<String>  a){
         return new HashSet<String>(a).toArray(new String[0]);
     }
+
+    public static boolean stringHasAnyOfArray(String string, String[] array) {
+        return Arrays.stream(array).parallel().anyMatch(string::contains);
+    }
+
 
 
 }
