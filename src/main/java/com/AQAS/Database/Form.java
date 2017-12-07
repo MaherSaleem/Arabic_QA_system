@@ -10,10 +10,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.io.*;
+import java.util.*;
 
 import static com.AQAS.Database.HelpersDB.props;
 
@@ -26,6 +24,7 @@ public class Form {
     public String normalizedText;
     public ArrayList<Document> documents = new ArrayList<Document>();
     private String [] keyPhrases = null;
+    public ArrayList<Segment> topSegments = new ArrayList<>();
 
 
     public Form() {
@@ -192,10 +191,45 @@ public class Form {
     */
     public  void generateFormDocumentsSegments() {
 
-        String [] questionKeyPhrases = this.getKeyPhrases();
+        String[] questionKeyPhrases = this.getKeyPhrases();
         for (Document document : this.documents) {
             document.generateDocumentSegments(questionKeyPhrases, null);
+            document.calculateSegmentsRanks(this);
+            document.removeIrrelevantSegments();
+
+//            //just printing
+//            System.out.println("*************After segmentation process*************");
+//            PrintWriter writer = null;
+//            try {
+//                writer = new PrintWriter(new FileOutputStream(
+//                        new File("out.txt"),
+//                        true /* append = true */));
+//
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//            for (Segment segment: document.segments) {
+//                writer.println(segment.text);
+//                writer.println("Rank is :" + segment.getRank());
+//                writer.println("types are is :" + segment.findSegmentTypes());
+//
+//
+//                writer.println("==================================================");
+//            }
+//            writer.println("*****************Finshed the current Document************");
+//            writer.close();
         }
+
+        //filling documents in form.topPassages ArrayList
+
+        ArrayList<Segment> tempTopSegments = new ArrayList<Segment>();
+        for (Document document : this.documents) {
+                tempTopSegments.addAll(document.getSegments());
+        }
+
+        this.setTopSegments(tempTopSegments);
+        Collections.sort(this.getTopSegments());
+
     }
 
     public void setNormalizedText(String normalizedText) {
@@ -205,4 +239,13 @@ public class Form {
     public String getNormalizedText() {
         return normalizedText;
     }
+
+    public ArrayList<Segment> getTopSegments() {
+        return topSegments;
+    }
+
+    public void setTopSegments(ArrayList<Segment> topSegments) {
+        this.topSegments = topSegments;
+    }
+
 }

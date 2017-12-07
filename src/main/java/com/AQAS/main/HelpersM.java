@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HelpersM {
 
@@ -64,6 +66,16 @@ public class HelpersM {
 
     public static boolean stringHasAnyOfArray(String string, String[] array) {
         return Arrays.stream(array).parallel().anyMatch(string::contains);
+    }
+
+    public static int regexCount(String regex, String text){
+        Pattern pattern = Pattern.compile(regex,(Pattern.UNICODE_CHARACTER_CLASS | Pattern.MULTILINE));
+        Matcher matcher = pattern.matcher(text);
+        int count = 0;
+        while (matcher.find())
+            count++;
+
+        return count;
     }
 
 

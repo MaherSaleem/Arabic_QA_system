@@ -5,8 +5,10 @@ import com.AQAS.passages_segmentation.PassageSegmentation;
 import org.jsoup.Jsoup;
 
 import javax.print.Doc;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static com.AQAS.Database.HelpersDB.props;
 
@@ -112,7 +114,7 @@ public class Document implements Comparable<Document> {
         return  diff != 0 ? ( diff >0 ? -1 : 1): 0;
     }
 
-    public  void generateDocumentSegments( String[] questionKeyPhrases, String splitRegex) {
+    public  void generateDocumentSegments( String[] questionKeyPhrases, String splitRegex)  {
 
         splitRegex = splitRegex != null ? splitRegex : "[؟?!.]";
 
@@ -168,6 +170,39 @@ public class Document implements Comparable<Document> {
 
         }
         this.segments = segments;
+
+//        //just printing
+//        System.out.println("*************After segmentation process*************");
+//        PrintWriter writer = null;
+//        try {
+//            writer = new PrintWriter(new FileOutputStream(
+//                    new File("out.txt"),
+//                    true /* append = true */));
+//
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        for (Segment segment: this.segments) {
+//            writer.println(segment.text);
+//            writer.println("==================================================");
+//        }
+//        writer.println("Finshed the current File");
+//        writer.close();
     }
 
+
+    public void calculateSegmentsRanks(Form form) {
+
+        for (Segment segment:this.segments) {
+            segment.calculateRank(form, this);
+        }
+    }
+
+    public void removeIrrelevantSegments() {
+        for (Iterator<Segment> segment = this.segments.iterator(); segment.hasNext(); ) {
+            if (segment.next().getRank() < ConfigPS.SEGMENT_THRESHOLD) {
+                segment.remove();
+            }
+        }
+    }
 }

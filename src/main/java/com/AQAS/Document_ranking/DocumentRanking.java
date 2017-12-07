@@ -35,9 +35,7 @@ public class DocumentRanking {
             System.out.println("all keyphrases and synonyms");
             keyPhraseArrayList.addAll(Arrays.asList(keyPhraseSynonyms));
         }
-        if (ConfigKE.VERBOS) {
-            keyPhrases = keyPhraseArrayList.toArray(new String[keyPhraseArrayList.size()]);
-        }
+        keyPhrases = keyPhraseArrayList.toArray(new String[keyPhraseArrayList.size()]);
         HashMap<String, Double> keyPhrasesFrequencies = HelpersDR.getWordsFreqInDoc(keyPhrases, document);
         double cosineSimilarity = HelpersDR.cosineSimilarity(query, document);
 
