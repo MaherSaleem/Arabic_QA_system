@@ -18,7 +18,7 @@ public class Document implements Comparable<Document> {
     int form_id;
     double urlRank; // according to the search engine [the order of it]
     double contentRank;
-    ArrayList<String> segments = new ArrayList<>();
+    ArrayList<Segment> segments = new ArrayList<Segment>();
 
     public Document(String link, String text) {
         this.link = link;
@@ -82,12 +82,13 @@ public class Document implements Comparable<Document> {
         return this.contentRank;
     }
 
-    public void setSegments(ArrayList<String> segments) {
-        this.segments = segments;
+
+    public ArrayList<Segment> getSegments() {
+        return segments;
     }
 
-    public ArrayList<String> getSegments() {
-        return segments;
+    public void setSegments(ArrayList<Segment> segments) {
+        this.segments = segments;
     }
 
     @Override
@@ -131,7 +132,7 @@ public class Document implements Comparable<Document> {
         int sentencesSize = documentSentences.length;
         int startIndex = 0;
         int endIndex = 0;
-        ArrayList<String> segments = new ArrayList<>();
+        ArrayList<Segment> segments = new ArrayList<>();
         for (int i = 0; i < sentencesSize; i++) {
             String si = documentSentences[i];
             if (PassageSegmentation.hasKeyPhrases(si, questionKeyPhrases) || i == sentencesSize - 1) {
@@ -158,10 +159,10 @@ public class Document implements Comparable<Document> {
                 if (state == ConfigPS.STATE_LAST_SENTENCE) {
                     int LastSegmentIndex = segments.size() - 1;
                     segmentString += documentSentences[sentencesSize - 1];
-                    segments.set(LastSegmentIndex, segments.get(LastSegmentIndex) + ". " + segmentString);
+                    segments.set(LastSegmentIndex, new Segment(segments.get(LastSegmentIndex).text + ". " + segmentString));
                 } else {
                     System.out.println(segments.size());
-                    segments.add(segmentString);
+                    segments.add(new Segment(segmentString));
                 }
             }
 
