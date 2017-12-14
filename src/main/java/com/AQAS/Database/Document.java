@@ -200,9 +200,17 @@ public class Document implements Comparable<Document> {
 
     public void removeIrrelevantSegments() {
         for (Iterator<Segment> segment = this.segments.iterator(); segment.hasNext(); ) {
-            if (segment.next().getRank() < ConfigPS.SEGMENT_THRESHOLD) {
+            if (segment.next().getRank() <= ConfigPS.SEGMENT_THRESHOLD) {
                 segment.remove();
             }
+        }
+    }
+
+
+    public void setSegmentsOrder(){
+        int i=1;
+        for (Segment segment:this.segments) {
+            segment.setSegmentOrder(i++);
         }
     }
 }

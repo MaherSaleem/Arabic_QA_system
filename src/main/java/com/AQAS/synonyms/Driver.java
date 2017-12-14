@@ -1,11 +1,6 @@
 package com.AQAS.synonyms;
 
 
-import com.AQAS.keyphrase_extraction.keyphraseExtraction;
-import com.AQAS.main.HelpersM;
-
-import java.util.ArrayList;
-
 public class Driver {
 
     // execution starts here

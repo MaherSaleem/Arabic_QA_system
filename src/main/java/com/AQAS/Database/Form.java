@@ -1,13 +1,15 @@
 package com.AQAS.Database;
 
 import com.AQAS.Document_ranking.ConfigDR;
-import com.AQAS.document_retrieval.ConfigD;
+import com.AQAS.Document_ranking.HelpersDR;
+import com.AQAS.answer_extraction.ConfigAE;
 import com.AQAS.keyphrase_extraction.HelpersKE;
+import com.AQAS.main.HelpersM;
+import com.AQAS.question_type.ConfigQT;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 
 import java.io.*;
@@ -23,8 +25,9 @@ public class Form {
     public int question_type;
     public String normalizedText;
     public ArrayList<Document> documents = new ArrayList<Document>();
-    private String [] keyPhrases = null;
+    private String[] keyPhrases = null;
     public ArrayList<Segment> topSegments = new ArrayList<>();
+    public ArrayList<Answer> answers = new ArrayList<Answer>();
 
 
     public Form() {
@@ -60,7 +63,7 @@ public class Form {
     public ArrayList<Document> getDocuments() {
         try {
             String json = Jsoup.connect(props.getProperty("LOCAL_SERVER_IP") + "/forms/document/" + this.id).ignoreContentType(true).execute().body();
-           // System.out.println("JSON: "+json);
+            // System.out.println("JSON: "+json);
             JSONParser parser = new JSONParser();
             Object obj = null;
             obj = parser.parse(json.toString());
@@ -127,18 +130,16 @@ public class Form {
         }
     }
 
-    private double getRelevancyThreshold(){
+    private double getRelevancyThreshold() {
 
-        if (ConfigDR.THRESHOLD_SOURCE == ConfigDR.STATIC_THRESHOLD){
+        if (ConfigDR.THRESHOLD_SOURCE == ConfigDR.STATIC_THRESHOLD) {
             return ConfigDR.RELEVANCY_THRESHOLD;
-        }
-        else if(ConfigDR.THRESHOLD_SOURCE == ConfigDR.STATISTICAL_THRESHOLD){
+        } else if (ConfigDR.THRESHOLD_SOURCE == ConfigDR.STATISTICAL_THRESHOLD) {
             double avg = getDocumentsRanksAvg();
             double standardDeviation = getDocumentsRankStandardDeviation();
-            if (avg <= standardDeviation){
-                return  avg ;
-            }
-            else{
+            if (avg <= standardDeviation) {
+                return avg;
+            } else {
                 return avg - standardDeviation;
             }
         }
@@ -158,16 +159,17 @@ public class Form {
 
     public double getDocumentsRanksAvg() {
         double sum = 0;
-        for (Document document: this.documents) {
+        for (Document document : this.documents) {
             sum += document.overAllRank();
         }
         return sum / this.documents.size();
     }
+
     public double getDocumentsRankStandardDeviation() {
         double mean = getDocumentsRanksAvg();
         double sum = 0;
-        for (Document document: this.documents) {
-            sum += Math.pow((document.overAllRank()-mean),2);
+        for (Document document : this.documents) {
+            sum += Math.pow((document.overAllRank() - mean), 2);
         }
         return Math.sqrt(sum / this.documents.size());
     }
@@ -178,8 +180,8 @@ public class Form {
     }
 
 
-    public String[] getKeyPhrases(){
-        if(this.keyPhrases == null) {
+    public String[] getKeyPhrases() {
+        if (this.keyPhrases == null) {
             this.keyPhrases = HelpersKE.getKeyPhrases(this.getNormalizedText());
         }
         return this.keyPhrases;
@@ -189,14 +191,14 @@ public class Form {
    *
    * this will generate the segments for each document in a form
     */
-    public  void generateFormDocumentsSegments() {
+    public void generateFormDocumentsSegments() {
 
         String[] questionKeyPhrases = this.getKeyPhrases();
         for (Document document : this.documents) {
             document.generateDocumentSegments(questionKeyPhrases, null);
             document.calculateSegmentsRanks(this);
             document.removeIrrelevantSegments();
-
+            document.setSegmentsOrder();
 //            //just printing
 //            System.out.println("*************After segmentation process*************");
 //            PrintWriter writer = null;
@@ -224,10 +226,10 @@ public class Form {
 
         ArrayList<Segment> tempTopSegments = new ArrayList<Segment>();
         for (Document document : this.documents) {
-                tempTopSegments.addAll(document.getSegments());
+            tempTopSegments.addAll(document.getSegments());
         }
 
-        this.setTopSegments(tempTopSegments);
+        this.setTopSegments(tempTopSegments);//best segments in all documents
         Collections.sort(this.getTopSegments());
 
     }
@@ -248,4 +250,70 @@ public class Form {
         this.topSegments = topSegments;
     }
 
+
+    public void extractAnswer() {
+        int topSegmentsSize = this.topSegments.size();
+        switch (this.question_type) {
+            case ConfigQT.QT_LIST:
+
+
+                for (int i = 0; i < ConfigAE.topN.LIST; i++) {
+                    try {
+                        this.answers.add(new Answer(this.topSegments.get(i).getText()));
+                    } catch (Exception e) {
+                        break;
+                    }
+                }
+                break;
+            case ConfigQT.QT_NUMERIC:
+                for (int i = 0; i < ConfigAE.topN.DEFINITION; i++) {
+
+                    try {
+                        Segment segment = this.topSegments.get(i);
+                        String segmentText = segment.getText();
+                        String [] segmentSentences = segmentText.split("\\.");
+
+                        Answer bestAnswer = new Answer();
+                        double bestCosine = -1;
+                        for (String sentence : segmentSentences){
+                            //Answer dummyAnswer = Answer(sentence);
+                            if (HelpersM.regexCount("\\d+", sentence) > 1) {// the sentence has a number
+                                double cosSim = HelpersDR.cosineSimilarity(sentence, this.text);
+                                if(cosSim > bestCosine){
+                                    bestAnswer.setText(sentence);
+                                    bestAnswer.setRank(cosSim);
+                                }
+                            }
+                        }
+                        this.answers.add(bestAnswer);
+
+                    }
+                    catch (Exception e){
+                        break;
+                    }
+
+                }
+                Collections.sort(this.answers);
+
+
+                break;
+            case ConfigQT.QT_PARAGRAPH:
+
+
+                for (int i = 0; i < ConfigAE.topN.DEFINITION; i++) {
+                    try {
+                        this.answers.add(new Answer(this.topSegments.get(i).getText()));
+                    } catch (Exception e) {
+                        break;
+                    }
+                }
+                break;
+        }
+
+        this.printAnswers();
+    }
+
+    public void printAnswers() {
+        System.out.println(this.answers);
+    }
 }

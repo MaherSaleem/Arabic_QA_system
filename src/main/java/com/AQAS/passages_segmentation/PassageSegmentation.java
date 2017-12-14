@@ -1,11 +1,6 @@
 package com.AQAS.passages_segmentation;
 
-import com.AQAS.Database.Document;
-import com.AQAS.Database.Form;
 import com.AQAS.main.HelpersM;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PassageSegmentation {
 

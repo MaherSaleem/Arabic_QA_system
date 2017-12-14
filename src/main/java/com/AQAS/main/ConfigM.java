@@ -12,6 +12,6 @@ public final class ConfigM {
     public static final boolean BUILD_DB = false;
 
 
-    public final static String query = "ما هي أعراض مرض السكري؟";
+    public final static String query = "كم مدة علاج الانفلونزا؟";
     public final static int searchNumOfPages = 1;
 }

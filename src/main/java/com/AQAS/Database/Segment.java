@@ -1,4 +1,4 @@
-package com.AQAS.Database;
+ package com.AQAS.Database;
 
 import com.AQAS.Document_ranking.DocumentRanking;
 import com.AQAS.main.HelpersM;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class Segment  implements Comparable<Segment>{
     public String text;
     public double rank;
+    public int segmentOrder;
 
 
     public Segment(String text) {
@@ -24,6 +25,11 @@ public class Segment  implements Comparable<Segment>{
     public Segment(String text, double rank) {
         this.text = text;
         this.rank = rank;
+    }
+    public Segment(String text, double rank, int segmentOrder) {
+        this.text = text;
+        this.rank = rank;
+        this.segmentOrder = segmentOrder;
     }
 
     public String getText() {
@@ -40,6 +46,14 @@ public class Segment  implements Comparable<Segment>{
 
     public void setRank(double rank) {
         this.rank = rank;
+    }
+
+    public int getSegmentOrder() {
+        return segmentOrder;
+    }
+
+    public void setSegmentOrder(int segmentOrder) {
+        this.segmentOrder = segmentOrder;
     }
 
     @Override
