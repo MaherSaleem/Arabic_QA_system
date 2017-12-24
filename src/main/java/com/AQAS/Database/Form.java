@@ -27,11 +27,20 @@ public class Form {
     public String normalizedText;
     public ArrayList<Document> documents = new ArrayList<Document>();
     private String[] keyPhrases = null;
-    public ArrayList<Segment> topSegments = new ArrayList<>();
-    public ArrayList<Answer> answers = new ArrayList<Answer>();
+    public ArrayList<Segment> topSegmentsByRank = new ArrayList<>();// top segments by rank
+    public ArrayList<Segment> topSegmentsByOrder = new ArrayList<>();//top segments by order of document
+    public ArrayList<Answer> answers = new ArrayList<Answer>();// the segments ordered by Rank
 
 
     public Form() {
+    }
+
+    public ArrayList<Segment> getTopSegmentsByOrder() {
+        return topSegmentsByOrder;
+    }
+
+    public void setTopSegmentsByOrder(ArrayList<Segment> topSegmentsByOrder) {
+        this.topSegmentsByOrder = topSegmentsByOrder;
     }
 
     public Form(int id) {
@@ -198,8 +207,8 @@ public class Form {
         for (Document document : this.documents) {
             document.generateDocumentSegments(questionKeyPhrases, null);
             document.calculateSegmentsRanks(this);
-            document.removeIrrelevantSegments();
             document.setSegmentsOrder();
+            document.removeIrrelevantSegments();
 //            //just printing
 //            System.out.println("*************After segmentation process*************");
 //            PrintWriter writer = null;
@@ -230,8 +239,8 @@ public class Form {
             tempTopSegments.addAll(document.getSegments());
         }
 
-        this.setTopSegments(tempTopSegments);//best segments in all documents
-        Collections.sort(this.getTopSegments());
+        Collections.sort(tempTopSegments);
+        this.setTopSegmentsByRank(tempTopSegments);//best segments in all documents
 
     }
 
@@ -243,34 +252,34 @@ public class Form {
         return normalizedText;
     }
 
-    public ArrayList<Segment> getTopSegments() {
-        return topSegments;
+    public ArrayList<Segment> getTopSegmentsByRank() {
+        return topSegmentsByRank;
     }
 
-    public void setTopSegments(ArrayList<Segment> topSegments) {
-        this.topSegments = topSegments;
+    public void setTopSegmentsByRank(ArrayList<Segment> topSegmentsByRank) {
+        this.topSegmentsByRank = topSegmentsByRank;
     }
 
 
     public void extractAnswer() {
-        int topSegmentsSize = this.topSegments.size();
+        int topSegmentsSize = this.topSegmentsByRank.size();
         switch (this.question_type) {
             case ConfigQT.QT_LIST:
 
 
                 for (int i = 0; i < ConfigAE.topN.LIST; i++) {
                     try {
-                        this.answers.add(new Answer(this.topSegments.get(i).getText()));
+                        this.answers.add(new Answer(this.topSegmentsByRank.get(i).getText()));
                     } catch (Exception e) {
                         break;
                     }
                 }
                 break;
             case ConfigQT.QT_NUMERIC:
-                for (int i = 0; i < ConfigAE.topN.DEFINITION; i++) {
+                for (int i = 0; i < ConfigAE.topN.NUMERIC; i++) {
 
                     try {
-                        Segment segment = this.topSegments.get(i);
+                        Segment segment = this.topSegmentsByRank.get(i);
                         String segmentText = segment.getText();
                         String [] segmentSentences = segmentText.split("\\.");
 
@@ -301,9 +310,10 @@ public class Form {
             case ConfigQT.QT_PARAGRAPH:
 
 
+
                 for (int i = 0; i < ConfigAE.topN.DEFINITION; i++) {
                     try {
-                        this.answers.add(new Answer(this.topSegments.get(i).getText()));
+                        this.answers.add(new Answer(this.topSegmentsByRank.get(i).getText()));
                     } catch (Exception e) {
                         break;
                     }
