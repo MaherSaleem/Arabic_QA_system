@@ -21,6 +21,7 @@ public class Document implements Comparable<Document> {
     double urlRank; // according to the search engine [the order of it]
     double contentRank;
     ArrayList<Segment> segments = new ArrayList<Segment>();
+    String[] keyPhases ;
 
     public Document(String link, String text) {
         this.link = link;
@@ -109,6 +110,14 @@ public class Document implements Comparable<Document> {
 
     public void setContentRank(double contentRank) {
         this.contentRank = contentRank;
+    }
+
+    public String[] getKeyPhases() {
+        return keyPhases;
+    }
+
+    public void setKeyPhases(String[] keyPhases) {
+        this.keyPhases = keyPhases;
     }
 
     public int store() {

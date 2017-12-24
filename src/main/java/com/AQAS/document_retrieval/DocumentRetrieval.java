@@ -1,6 +1,7 @@
 package com.AQAS.document_retrieval;
 
 import com.AQAS.Database.Document;
+import com.AQAS.keyphrase_extraction.HelpersKE;
 import com.AQAS.main.ConfigM;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
@@ -87,7 +88,9 @@ public class DocumentRetrieval {
                 }
                 String text = DocumentRetrieval.retrieveDocumentText(url, website_document.websiteContentSelector);
                 System.out.println(text);
-                documents.add(new Document(url, text, urlOrder++));
+                Document document = new Document(url, text, urlOrder++);
+                document.setKeyPhases( HelpersKE.getKeyPhrases(text));
+                documents.add(document);
             }
         }
         return documents;
