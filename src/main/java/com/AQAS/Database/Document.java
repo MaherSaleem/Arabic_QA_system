@@ -27,10 +27,10 @@ public class Document implements Comparable<Document> {
         this.text = text;
     }
 
-    public Document(String link, String text, int form_id) {
+    public Document(String link, String text, double urlRank) {
         this.link = link;
         this.text = text;
-        this.form_id = form_id;
+        this.urlRank = urlRank;
     }
 
     public Document(int id, int form_id, double urlRank, double contentRank) {
@@ -61,6 +61,54 @@ public class Document implements Comparable<Document> {
         this.link = link;
         this.text = text;
         this.form_id = form_id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public int getForm_id() {
+        return form_id;
+    }
+
+    public void setForm_id(int form_id) {
+        this.form_id = form_id;
+    }
+
+    public double getUrlRank() {
+        return urlRank;
+    }
+
+    public void setUrlRank(double urlRank) {
+        this.urlRank = urlRank;
+    }
+
+    public double getContentRank() {
+        return contentRank;
+    }
+
+    public void setContentRank(double contentRank) {
+        this.contentRank = contentRank;
     }
 
     public int store() {

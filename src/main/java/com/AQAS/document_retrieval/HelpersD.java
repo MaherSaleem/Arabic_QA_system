@@ -1,5 +1,10 @@
 package com.AQAS.document_retrieval;
 
+import com.AQAS.Database.Document;
+import com.AQAS.Database.Form;
+import com.AQAS.main.ConfigM;
+import com.AQAS.question_processessing.ConfigP;
+import com.AQAS.question_processessing.QuestionPreprocessing;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;

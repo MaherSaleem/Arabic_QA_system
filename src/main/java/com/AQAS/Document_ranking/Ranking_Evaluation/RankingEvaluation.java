@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 import static com.AQAS.Database.HelpersDB.intializeProb;
-import static com.AQAS.main.HelpersM.retrieveDocuments;
 
 public class RankingEvaluation {
 

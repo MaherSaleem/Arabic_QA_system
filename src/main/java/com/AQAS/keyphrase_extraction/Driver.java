@@ -11,6 +11,7 @@ public class Driver {
     public static void main(String[] args) {
         keyphraseExtraction kp = new keyphraseExtraction();
 
+        //TODO: Do the alternative strategy [getKeyPhrases]
         String [] topKeys = HelpersKE.getKeyPhrases("أعراض مرض السكري و أسبابه و سبل الوقاية منه");
 //        String[] topNkeys = kp.keyphraseInput(1,"What is the reason that cause cancer",false);
 

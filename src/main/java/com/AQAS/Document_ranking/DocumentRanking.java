@@ -19,30 +19,30 @@ public class DocumentRanking {
 
 
 
-        String[] keyPhrases = HelpersKE.getKeyPhrases(query);
+        String[] queryKeyPhrases = HelpersKE.getKeyPhrases(query);
 
         if (ConfigKE.VERBOS) {
             System.out.println("Keyphrases List is :");
-            System.out.println(Arrays.toString(keyPhrases));
+            System.out.println(Arrays.toString(queryKeyPhrases));
         }
-        ArrayList<String> keyPhraseArrayList = new ArrayList<String>(Arrays.asList(keyPhrases));
-        for (String keyPhrase : keyPhrases) {
-            String[] keyPhraseSynonyms = FindSynonyms.getWordSynonyms(keyPhrase);
+        ArrayList<String> queryKeyPhraseArrayList = new ArrayList<String>(Arrays.asList(queryKeyPhrases));
+        for (String queryKeyPhrase : queryKeyPhrases) {
+            String[] keyPhraseSynonyms = FindSynonyms.getWordSynonyms(queryKeyPhrase);
             if (ConfigKE.VERBOS) {
-                System.out.println("Synonyms for keyphrase \"" + keyPhrase + "\" are: ");
+                System.out.println("Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: ");
                 System.out.println(Arrays.asList(keyPhraseSynonyms));
             }
             System.out.println("all keyphrases and synonyms");
-            keyPhraseArrayList.addAll(Arrays.asList(keyPhraseSynonyms));
+            queryKeyPhraseArrayList.addAll(Arrays.asList(keyPhraseSynonyms));
         }
-        keyPhrases = keyPhraseArrayList.toArray(new String[keyPhraseArrayList.size()]);
-        HashMap<String, Double> keyPhrasesFrequencies = HelpersDR.getWordsFreqInDoc(keyPhrases, document);
+        queryKeyPhrases = queryKeyPhraseArrayList.toArray(new String[queryKeyPhraseArrayList.size()]);
+        HashMap<String, Double> keyPhrasesFrequencies = HelpersDR.getWordsFreqInDoc(queryKeyPhrases, document);
         double cosineSimilarity = HelpersDR.cosineSimilarity(query, document);
 
 
 
         double keyPhrasesScore = 0;
-        for (String keyPhrase : keyPhrases) {
+        for (String keyPhrase : queryKeyPhrases) {
 
             double keyPhraseScore = 0;
             double keyPhraseFreq = keyPhrasesFrequencies.get(keyPhrase);
@@ -55,11 +55,8 @@ public class DocumentRanking {
             keyPhraseScore = keyPhraseFreq  * Math.sqrt(keyPhraseLength) * properNameScore;
             keyPhrasesScore += keyPhraseScore;
         }
-        if (keyPhrasesScore == 0) {
-            return cosineSimilarity;
-        } else {
-            return ConfigDR.a * keyPhrasesScore + ConfigDR.b * cosineSimilarity;
-        }
+
+        return ConfigDR.a * keyPhrasesScore + ConfigDR.b * cosineSimilarity;
 
     }
 

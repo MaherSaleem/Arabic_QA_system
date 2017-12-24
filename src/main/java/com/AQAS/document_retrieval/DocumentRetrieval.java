@@ -1,9 +1,12 @@
 package com.AQAS.document_retrieval;
 
+import com.AQAS.Database.Document;
+import com.AQAS.main.ConfigM;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,20 +18,20 @@ import static com.AQAS.document_retrieval.HelpersD.removeDuplicatesFromDocumentL
 public class DocumentRetrieval {
 
     public static ArrayList<Website_Document> getLinksOfAllWebsitesByQuery(String query, int searchNumOfPages) {
-        ArrayList<Website_Document> DocumentSLinksWithContentSelctor = new ArrayList<Website_Document>();
+        ArrayList<Website_Document> DocumentSLinksWithContentSelector = new ArrayList<Website_Document>();
         HashMap<String, Object> searchAttr = new HashMap<String, Object>();
         searchAttr.put(ConfigD.Keys.searchQuery, query);
         searchAttr.put(ConfigD.Keys.searchNumOfPages, searchNumOfPages);
         for (Website website : ConfigD.webSites) {
             try {
-                DocumentSLinksWithContentSelctor.add(website.extractDocumentsLinksForAllPages(searchAttr));
+                DocumentSLinksWithContentSelector.add(website.extractDocumentsLinksForAllPages(searchAttr));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-        return removeDuplicatesFromDocumentLinks(DocumentSLinksWithContentSelctor,ConfigD.websitesToremoveDuplicatesFrom);
+        return removeDuplicatesFromDocumentLinks(DocumentSLinksWithContentSelector,ConfigD.websitesToremoveDuplicatesFrom);
     }
 
 
@@ -60,6 +63,36 @@ public class DocumentRetrieval {
         return documentText;
 
     }
+
+    public static ArrayList<Document> getDocumentsByQuery(String preprocessed_query_string) throws IOException {
+
+        ArrayList<Document> documents = new ArrayList<>();
+        //Specify the number of search pages result to be used.
+        ArrayList<Website_Document> website_documents = DocumentRetrieval.getLinksOfAllWebsitesByQuery(preprocessed_query_string, ConfigM.searchNumOfPages);
+        //printing the links
+        if (ConfigD.VERBOS) {
+            System.out.println("All Links:");
+            for (Website_Document website_document : website_documents) {
+                for (String url : website_document.DocumentLinks) {
+                    System.out.println(url);
+                }
+            }
+        }
+
+        for (Website_Document website_document : website_documents) {
+            int urlOrder = 1;
+            for (String url : website_document.DocumentLinks) {
+                if (ConfigM.VERBOS) {
+                    System.out.println("Link is :" + url);
+                }
+                String text = DocumentRetrieval.retrieveDocumentText(url, website_document.websiteContentSelector);
+                System.out.println(text);
+                documents.add(new Document(url, text, urlOrder++));
+            }
+        }
+        return documents;
+    }
+
 
 
 }

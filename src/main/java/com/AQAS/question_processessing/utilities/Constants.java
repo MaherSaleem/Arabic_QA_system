@@ -35,6 +35,7 @@ public class Constants {
 	
 	static{
 		punctuations.add(",");
+		punctuations.add(".");
 		punctuations.add(":");
 		punctuations.add("،");    // Araic comma
 		punctuations.add("؛");    // Arabic semi-colons

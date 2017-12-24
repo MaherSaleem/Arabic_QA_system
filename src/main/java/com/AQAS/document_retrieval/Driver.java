@@ -1,8 +1,13 @@
 package com.AQAS.document_retrieval;
 
 
+import com.AQAS.Database.Document;
+import com.AQAS.main.ConfigM;
+import com.AQAS.question_processessing.ConfigP;
+import com.AQAS.question_processessing.QuestionPreprocessing;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import static com.AQAS.document_retrieval.HelpersD.closeWebDriver;
 import static com.AQAS.document_retrieval.HelpersD.openWebDriver;
 
@@ -13,19 +18,10 @@ public class Driver {
 
         openWebDriver();
 
-        String query = "ما هي أعراض مرض السكري؟";
-        //Specify the number of search pages result to be used.
-        int searchNumOfPages = 2;
-        ArrayList<Website_Document> website_documents = DocumentRetrieval.getLinksOfAllWebsitesByQuery(query, searchNumOfPages);
-        //printing the links
-        if (ConfigD.VERBOS) {
-            System.out.println("All Links:");
-            for (Website_Document website_document : website_documents) {
-                for (String url : website_document.DocumentLinks) {
-                    System.out.println(url);
-                }
-            }
-        }
+        HashMap<String, String> out = QuestionPreprocessing.preProcessInput(ConfigM.query);
+        String normalizedQuery = out.get(ConfigP.Keys.NormalizedText);
+
+        ArrayList<Document> documents  = DocumentRetrieval.getDocumentsByQuery(normalizedQuery);
 
         closeWebDriver();
 

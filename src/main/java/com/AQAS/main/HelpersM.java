@@ -25,35 +25,6 @@ public class HelpersM {
     }
 
 
-    public static Form retrieveDocuments(String query_string) throws IOException {
-        HashMap<String, String> out = QuestionPreprocessing.preProcessInput(query_string);
-
-        String normalizedQuery = out.get(ConfigP.Keys.NormalizedText);
-        Form form = new Form(query_string);
-        form.setNormalizedText(normalizedQuery);
-        ArrayList<Website_Document> website_documents = DocumentRetrieval.getLinksOfAllWebsitesByQuery(form.text, ConfigM.searchNumOfPages);
-
-        //printing the links
-        if (ConfigM.VERBOS) {
-            System.out.println("All Links:");
-        }
-
-        for (Website_Document website_document : website_documents) {
-            int urlOrder = 1;
-            for (String url : website_document.DocumentLinks) {
-                if (ConfigM.VERBOS) {
-                    System.out.println("Link is :" + url);
-                }
-                String text = DocumentRetrieval.retrieveDocumentText(url , website_document.websiteContentSelector);
-                double contentRank = DocumentRanking.getDocumentRank(text,normalizedQuery);
-                System.out.println("CR=>"+contentRank);
-                //new Logger("log");
-                form.documents.add(new Document(url, text,urlOrder++,contentRank));
-
-            }
-        }
-        return form;
-    }
 
     public static String[] removeStringDuplicates(String [] a){
         return new HashSet<String>(Arrays.asList(a)).toArray(new String[0]);
@@ -76,6 +47,35 @@ public class HelpersM {
         return count;
     }
 
+//    public static Form retrieveDocuments(String query_string) throws IOException {
+//        HashMap<String, String> out = QuestionPreprocessing.preProcessInput(query_string);
+//
+//        String normalizedQuery = out.get(ConfigP.Keys.NormalizedText);
+//        Form form = new Form(query_string);
+//        form.setNormalizedText(normalizedQuery);
+//        ArrayList<Website_Document> website_documents = DocumentRetrieval.getLinksOfAllWebsitesByQuery(form.text, ConfigM.searchNumOfPages);
+//
+//        //printing the links
+//        if (ConfigM.VERBOS) {
+//            System.out.println("All Links:");
+//        }
+//
+//        for (Website_Document website_document : website_documents) {
+//            int urlOrder = 1;
+//            for (String url : website_document.DocumentLinks) {
+//                if (ConfigM.VERBOS) {
+//                    System.out.println("Link is :" + url);
+//                }
+//                String text = DocumentRetrieval.retrieveDocumentText(url , website_document.websiteContentSelector);
+//                double contentRank = DocumentRanking.getDocumentRank(text,normalizedQuery);
+//                System.out.println("CR=>"+contentRank);
+//                //new Logger("log");
+//                form.documents.add(new Document(url, text,urlOrder++,contentRank));
+//
+//            }
+//        }
+//        return form;
+//    }
 
 
 }

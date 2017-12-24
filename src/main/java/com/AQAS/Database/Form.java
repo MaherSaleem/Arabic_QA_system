@@ -1,6 +1,7 @@
 package com.AQAS.Database;
 
 import com.AQAS.Document_ranking.ConfigDR;
+import com.AQAS.Document_ranking.DocumentRanking;
 import com.AQAS.Document_ranking.HelpersDR;
 import com.AQAS.answer_extraction.ConfigAE;
 import com.AQAS.keyphrase_extraction.HelpersKE;
@@ -315,5 +316,16 @@ public class Form {
 
     public void printAnswers() {
         System.out.println(this.answers);
+    }
+
+    public void setDocuments(ArrayList<Document> documents) {
+        this.documents = documents;
+    }
+
+    public void calculateDocumentsRanks(){
+        for (Document document:this.documents) {
+            double contentRank = DocumentRanking.getDocumentRank(text,this.normalizedText);
+            document.setContentRank(contentRank);
+        }
     }
 }
