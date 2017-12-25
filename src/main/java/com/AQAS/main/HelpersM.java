@@ -18,13 +18,6 @@ import java.util.regex.Pattern;
 
 public class HelpersM {
 
-    public static Form retrieveDocuments(int form_id) {
-        Form form = new Form(form_id);
-        form.getDocuments();
-        return form;
-    }
-
-
 
     public static String[] removeStringDuplicates(String [] a){
         return new HashSet<String>(Arrays.asList(a)).toArray(new String[0]);
