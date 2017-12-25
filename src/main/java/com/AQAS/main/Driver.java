@@ -22,7 +22,6 @@ public class Driver {
     public static void main(String[] args) throws IOException {
 
         intializeProb();
-        openWebDriver();
 
         if (ConfigM.BUILD_DB) {
             storeTestingData();
@@ -33,26 +32,32 @@ public class Driver {
          * This function will get the doucments, and will save the rank for each of them
          */
 
-        Form form;
-        if(!ConfigM.DATABASE_QUERY){
-            form = new Form(ConfigM.query);
+        Form form = Form.getInstance();
+        if (!ConfigM.DATABASE_QUERY) {
+            openWebDriver();
+            form.setText(ConfigM.query);
             HashMap<String, String> out = QuestionPreprocessing.preProcessInput(form.getText());
             String normalizedQuery = out.get(ConfigP.Keys.NormalizedText); //TODO check to user normalized_stemmed or only normalized
-            form.setNormalizedText(normalizedQuery);
             ArrayList<Document> retrievedDocuments = DocumentRetrieval.getDocumentsByQuery(normalizedQuery);
+            form.setNormalizedText(normalizedQuery);
             form.setDocuments(retrievedDocuments);
         }else{
             form = HelpersDB.getFormById(ConfigM.questionId);
-            form.setNormalizedText(form.getText());
+            HashMap<String, String> out = QuestionPreprocessing.preProcessInput(form.getText());
+            String normalizedQuery = out.get(ConfigP.Keys.NormalizedText); //TODO check to user normalized_stemmed or only normalized
+            form.setNormalizedText(normalizedQuery);
             form.getDocuments();
         }
 
-
+        System.out.println("***1");
 
         form.calculateDocumentsRanks();
 //        Form form = retrieveDocuments(ConfigM.query);//
+        System.out.println("***2");
 
+        //TODO use the saved model of machine learning
         ArrayList<Integer> result = getQuestionTypeUsingSVM(new ArrayList<>(Arrays.asList(form.getNormalizedText())));
+        System.out.println("***3");
         int questionType = result.size() > 0 ? result.get(0) : -1;
         form.setQuestion_type(questionType);
         System.out.println(form.question_type);
@@ -60,16 +65,20 @@ public class Driver {
 
 //        System.out.println("Before sorting Documents: " + form);
 
+        System.out.println("***4");
         Collections.sort(form.documents);// uses CompareTo in order to sort the document according to their contentRank
 
         System.out.println("After sorting Documents: " + form);
 
+        System.out.println("***5");
         form.removeIrrelevantDocuments();
 
+        System.out.println("***6");
         form.generateFormDocumentsSegments();
+        System.out.println("***7");
         form.extractAnswer();
 //        System.out.println("After Remove irrelevant: " + form);
-
         closeWebDriver();
+        System.out.println("***8");
     }
 }

@@ -70,8 +70,19 @@ public class Segment  implements Comparable<Segment>{
         ArrayList<Integer> segmentTypes = this.findSegmentTypes();
 
         double questionTypeScore = segmentTypes.contains(questionType) ? 1 : 0;
-        double keyPhrasesScore = findKeyPhrasesScore(form.text);
-        double documentRankScore = document.overAllRank();
+        double keyPhrasesScore = 0;
+        double documentRankScore = 0;
+        //if segment doesnt contain the question type => rank = 0
+        double rank = 0;
+        if(questionTypeScore == 0){
+            rank = 0;
+        }
+        else{
+            keyPhrasesScore = findKeyPhrasesScore(form.text);
+            documentRankScore = document.overAllRank();
+            rank = ConfigPS.weights.A * questionTypeScore + ConfigPS.weights.B * keyPhrasesScore + ConfigPS.weights.C * documentRankScore;
+        }
+
 
         PrintWriter writer = null;
         try {
@@ -90,14 +101,6 @@ public class Segment  implements Comparable<Segment>{
         System.out.println("keyphrase  Score: " + keyPhrasesScore);
         System.out.println("documentRank  Score: " + documentRankScore);
 
-        //if segment doesnt contain the question type => rank = 0
-        double rank = 0;
-        if(questionTypeScore == 0){
-            rank = 0;
-        }
-        else{
-            rank = ConfigPS.weights.A * questionTypeScore + ConfigPS.weights.B * keyPhrasesScore + ConfigPS.weights.C * documentRankScore;
-        }
 //        double rank = ConfigPS.weights.A * questionTypeScore + ConfigPS.weights.B * keyPhrasesScore + ConfigPS.weights.C * documentRankScore;
 
         this.setRank(rank);

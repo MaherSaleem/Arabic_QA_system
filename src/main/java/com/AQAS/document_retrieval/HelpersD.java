@@ -51,7 +51,9 @@ public final class HelpersD {
 
     public static void closeWebDriver() {
 
-        driver.close();
+        if (driver != null){
+            driver.close();
+        }
     }
 
 
