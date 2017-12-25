@@ -67,7 +67,7 @@ public class HelpersDB {
     }
 
     public static Form getFormById(int formId){
-        Form form = new Form();
+        Form form = Form.getInstance();
         try {
             String json = Jsoup.connect(props.getProperty("LOCAL_SERVER_IP") + "/forms/" + formId).ignoreContentType(true).execute().body();
             JSONParser parser = new JSONParser();

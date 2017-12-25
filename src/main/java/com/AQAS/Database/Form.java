@@ -4,9 +4,11 @@ import com.AQAS.Document_ranking.ConfigDR;
 import com.AQAS.Document_ranking.DocumentRanking;
 import com.AQAS.Document_ranking.HelpersDR;
 import com.AQAS.answer_extraction.ConfigAE;
+import com.AQAS.keyphrase_extraction.ConfigKE;
 import com.AQAS.keyphrase_extraction.HelpersKE;
 import com.AQAS.main.HelpersM;
 import com.AQAS.question_type.ConfigQT;
+import com.AQAS.synonyms.FindSynonyms;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -30,6 +32,16 @@ public class Form {
     public ArrayList<Segment> topSegmentsByRank = new ArrayList<>();// top segments by rank
     public ArrayList<Segment> topSegmentsByOrder = new ArrayList<>();//top segments by order of document
     public ArrayList<Answer> answers = new ArrayList<Answer>();// the segments ordered by Rank
+
+
+    private static Form singletonForm;
+    public static Form getInstance(){
+        if(singletonForm == null){
+            singletonForm = new Form();
+        }
+        return singletonForm;
+    }
+
 
 
     public Form() {
@@ -83,6 +95,33 @@ public class Form {
         this.keyPhrases = keyPhrases;
     }
 
+    public void setKeyPhrases() {
+        String[] queryKeyPhrases = HelpersKE.getKeyPhrases(this.normalizedText);
+
+        if (ConfigKE.VERBOS) {
+            System.out.println("Keyphrases List is :");
+            System.out.println(Arrays.toString(queryKeyPhrases));
+        }
+        ArrayList<String> queryKeyPhraseArrayList = new ArrayList<String>(Arrays.asList(queryKeyPhrases));
+        for (String queryKeyPhrase : queryKeyPhrases) {
+            String[] keyPhraseSynonyms = FindSynonyms.getWordSynonyms(queryKeyPhrase);
+            if (ConfigKE.VERBOS) {
+                System.out.println("Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: ");
+                System.out.println(Arrays.asList(keyPhraseSynonyms));
+            }
+            System.out.println("all keyphrases and synonyms");
+            queryKeyPhraseArrayList.addAll(Arrays.asList(keyPhraseSynonyms));
+        }
+        queryKeyPhrases = queryKeyPhraseArrayList.toArray(new String[queryKeyPhraseArrayList.size()]);
+
+        this.keyPhrases = queryKeyPhrases;
+    }
+    public String[] getKeyPhrases() {
+        if (this.keyPhrases == null) {
+            this.setKeyPhrases();
+        }
+        return this.keyPhrases;
+    }
     public ArrayList<Answer> getAnswers() {
         return answers;
     }
@@ -227,12 +266,7 @@ public class Form {
     }
 
 
-    public String[] getKeyPhrases() {
-        if (this.keyPhrases == null) {
-            this.keyPhrases = HelpersKE.getKeyPhrases(this.getNormalizedText());
-        }
-        return this.keyPhrases;
-    }
+
 
     /*
    *
