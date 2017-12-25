@@ -51,6 +51,45 @@ public class Form {
         this.text = text;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getQuestion_id() {
+        return question_id;
+    }
+
+    public void setQuestion_id(int question_id) {
+        this.question_id = question_id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public int getQuestion_type() {
+        return question_type;
+    }
+
+    public void setKeyPhrases(String[] keyPhrases) {
+        this.keyPhrases = keyPhrases;
+    }
+
+    public ArrayList<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(ArrayList<Answer> answers) {
+        this.answers = answers;
+    }
 
     public int store() {
         try {
@@ -81,16 +120,14 @@ public class Form {
             JSONArray jsonArray = (JSONArray) obj;
             Iterator<JSONObject> iterator = jsonArray.iterator();
             while (iterator.hasNext()) {
-
                 JSONObject tmp = iterator.next();
                 String link = (String) tmp.get("link");
                 String text = StringEscapeUtils.unescapeJava((String) tmp.get("text"));
                 int document_id = Integer.parseInt(tmp.get("id") + "");
                 JSONObject pivot = (JSONObject) tmp.get("pivot");
 
-                double contentRank = Double.parseDouble(pivot.get("contentRank") + "");
                 double urltRank = Double.parseDouble(pivot.get("urlRank") + "");
-                this.documents.add(new Document(document_id, link, text, this.id, urltRank, contentRank));
+                this.documents.add(new Document(document_id, link, text, this.id, urltRank));
 
             }
 
@@ -334,7 +371,7 @@ public class Form {
 
     public void calculateDocumentsRanks(){
         for (Document document:this.documents) {
-            double contentRank = DocumentRanking.getDocumentRank(text,this.normalizedText);
+            double contentRank = DocumentRanking.getDocumentRank(document.text,this.normalizedText);
             document.setContentRank(contentRank);
         }
     }

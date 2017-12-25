@@ -6,6 +6,9 @@ import com.AQAS.document_retrieval.Website_Document;
 import com.AQAS.main.ConfigM;
 import com.AQAS.question_processessing.ConfigP;
 import com.AQAS.question_processessing.QuestionPreprocessing;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.jsoup.Jsoup;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -60,6 +63,28 @@ public class HelpersDB {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    public static Form getFormById(int formId){
+        Form form = new Form();
+        try {
+            String json = Jsoup.connect(props.getProperty("LOCAL_SERVER_IP") + "/forms/" + formId).ignoreContentType(true).execute().body();
+            JSONParser parser = new JSONParser();
+            Object obj = null;
+            obj = parser.parse(json.toString());
+
+            JSONObject jsonObject = (JSONObject) obj;
+            String text = (String) jsonObject.get("text");
+            form.setText(text);
+            form.setId(formId);
+            return form;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
 
     }
 

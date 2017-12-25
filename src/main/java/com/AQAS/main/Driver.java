@@ -3,8 +3,8 @@ package com.AQAS.main;
 
 import com.AQAS.Database.Document;
 import com.AQAS.Database.Form;
+import com.AQAS.Database.HelpersDB;
 import com.AQAS.document_retrieval.DocumentRetrieval;
-import com.AQAS.document_retrieval.HelpersD;
 import com.AQAS.question_processessing.ConfigP;
 import com.AQAS.question_processessing.QuestionPreprocessing;
 
@@ -32,13 +32,23 @@ public class Driver {
          *
          * This function will get the doucments, and will save the rank for each of them
          */
-        HashMap<String, String> out = QuestionPreprocessing.preProcessInput(ConfigM.query);
-        String normalizedQuery = out.get(ConfigP.Keys.NormalizedText); //TODO check to user normalized_stemmed or only normalized
-        Form form = new Form(ConfigM.query);
-        form.setNormalizedText(normalizedQuery);
 
-        ArrayList<Document> retrievedDocuments = DocumentRetrieval.getDocumentsByQuery(normalizedQuery);
-        form.setDocuments(retrievedDocuments);
+        Form form;
+        if(!ConfigM.DATABASE_QUERY){
+            form = new Form(ConfigM.query);
+            HashMap<String, String> out = QuestionPreprocessing.preProcessInput(form.getText());
+            String normalizedQuery = out.get(ConfigP.Keys.NormalizedText); //TODO check to user normalized_stemmed or only normalized
+            form.setNormalizedText(normalizedQuery);
+            ArrayList<Document> retrievedDocuments = DocumentRetrieval.getDocumentsByQuery(normalizedQuery);
+            form.setDocuments(retrievedDocuments);
+        }else{
+            form = HelpersDB.getFormById(ConfigM.questionId);
+            form.setNormalizedText(form.getText());
+            form.getDocuments();
+        }
+
+
+
         form.calculateDocumentsRanks();
 //        Form form = retrieveDocuments(ConfigM.query);//
 

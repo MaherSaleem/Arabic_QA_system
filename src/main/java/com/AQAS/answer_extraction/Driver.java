@@ -1,7 +1,6 @@
 package com.AQAS.answer_extraction;
 
 
-import com.AQAS.Database.Answer;
 import com.AQAS.Database.Form;
 import com.AQAS.Database.Segment;
 import com.AQAS.question_type.ConfigQT;
@@ -15,7 +14,7 @@ public class Driver {
         Form form = new Form();
         form.text = "ما هي اعراض مرض السكري";
         form.question_type = ConfigQT.QT_LIST;
-        form.topSegments = getSegments();
+        form.topSegmentsByRank = getSegments();
         form.extractAnswer();
     }
 
