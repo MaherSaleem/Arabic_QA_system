@@ -289,7 +289,9 @@ public class Form {
             });
 
 //            tempTopSegmentsByOrder.addAll(document.segments.subList(0, ConfigAE.TOP_SEGMENTS_BY_ORDER));
-            tempTopSegmentsByOrder.addAll(document.segments.subList(0, (int) Math.ceil((double)ConfigAE.topN.DEFINITION/(double)this.documents.size())));
+            if(document.segments.size() > 0){
+                tempTopSegmentsByOrder.addAll(document.segments.subList(0, (int) Math.ceil((double)ConfigAE.topN.DEFINITION/(double)this.documents.size())));
+            }
 
 //            //just printing
 //            System.out.println("*************After segmentation process*************");
