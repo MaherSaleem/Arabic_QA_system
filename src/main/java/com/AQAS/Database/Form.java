@@ -240,12 +240,23 @@ public class Form {
     */
     public void generateFormDocumentsSegments() {
 
+        ArrayList<Segment> tempTopSegmentsByOrder = new ArrayList<>();
         String[] questionKeyPhrases = this.getKeyPhrases();
         for (Document document : this.documents) {
             document.generateDocumentSegments(questionKeyPhrases, null);
             document.calculateSegmentsRanks(this);
             document.setSegmentsOrder();
             document.removeIrrelevantSegments();
+
+            //Get top N segments according to their order in the document
+            Collections.sort(document.segments, (o1, o2) -> {
+                double diff = (o2.getSegmentOrder() - o1.getSegmentOrder());
+                return diff != 0 ? (diff > 0 ? -1 : 1) : 0;
+            });
+
+//            tempTopSegmentsByOrder.addAll(document.segments.subList(0, ConfigAE.TOP_SEGMENTS_BY_ORDER));
+            tempTopSegmentsByOrder.addAll(document.segments.subList(0, (int) Math.ceil((double)ConfigAE.topN.DEFINITION/(double)this.documents.size())));
+
 //            //just printing
 //            System.out.println("*************After segmentation process*************");
 //            PrintWriter writer = null;
@@ -270,14 +281,16 @@ public class Form {
         }
 
         //filling documents in form.topPassages ArrayList
-
         ArrayList<Segment> tempTopSegments = new ArrayList<Segment>();
         for (Document document : this.documents) {
             tempTopSegments.addAll(document.getSegments());
         }
-
         Collections.sort(tempTopSegments);
         this.setTopSegmentsByRank(tempTopSegments);//best segments in all documents
+
+        Collections.sort(tempTopSegmentsByOrder);
+        this.setTopSegmentsByOrder(tempTopSegmentsByOrder);
+
 
     }
 
@@ -301,9 +314,8 @@ public class Form {
     public void extractAnswer() {
         int topSegmentsSize = this.topSegmentsByRank.size();
         switch (this.question_type) {
+
             case ConfigQT.QT_LIST:
-
-
                 for (int i = 0; i < ConfigAE.topN.LIST; i++) {
                     try {
                         this.answers.add(new Answer(this.topSegmentsByRank.get(i).getText()));
@@ -312,21 +324,22 @@ public class Form {
                     }
                 }
                 break;
+
             case ConfigQT.QT_NUMERIC:
                 for (int i = 0; i < ConfigAE.topN.NUMERIC; i++) {
 
                     try {
                         Segment segment = this.topSegmentsByRank.get(i);
                         String segmentText = segment.getText();
-                        String [] segmentSentences = segmentText.split("\\.");
+                        String[] segmentSentences = segmentText.split("\\.");
 
                         Answer bestAnswer = new Answer();
                         double bestCosine = -1;
-                        for (String sentence : segmentSentences){
+                        for (String sentence : segmentSentences) {
                             //Answer dummyAnswer = Answer(sentence);
                             if (HelpersM.regexCount("\\d+", sentence) > 1) {// the sentence has a number
                                 double cosSim = HelpersDR.cosineSimilarity(sentence, this.text);
-                                if(cosSim > bestCosine){
+                                if (cosSim > bestCosine) {
                                     bestAnswer.setText(sentence);
                                     bestAnswer.setRank(cosSim);
                                 }
@@ -334,23 +347,18 @@ public class Form {
                         }
                         this.answers.add(bestAnswer);
 
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         break;
                     }
 
                 }
                 Collections.sort(this.answers);
-
-
                 break;
+
             case ConfigQT.QT_PARAGRAPH:
-
-
-
                 for (int i = 0; i < ConfigAE.topN.DEFINITION; i++) {
                     try {
-                        this.answers.add(new Answer(this.topSegmentsByRank.get(i).getText()));
+                        this.answers.add(new Answer(this.topSegmentsByOrder.get(i).getText()));
                     } catch (Exception e) {
                         break;
                     }
@@ -369,9 +377,9 @@ public class Form {
         this.documents = documents;
     }
 
-    public void calculateDocumentsRanks(){
-        for (Document document:this.documents) {
-            double contentRank = DocumentRanking.getDocumentRank(document.text,this.normalizedText);
+    public void calculateDocumentsRanks() {
+        for (Document document : this.documents) {
+            double contentRank = DocumentRanking.getDocumentRank(document.text, this.normalizedText);
             document.setContentRank(contentRank);
         }
     }
