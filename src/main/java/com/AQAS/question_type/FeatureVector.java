@@ -3,6 +3,7 @@ package com.AQAS.question_type;
 import com.AQAS.Database.Form;
 import com.AQAS.Database.Question;
 import com.AQAS.question_processessing.QuestionPreprocessing;
+import weka.classifiers.functions.SMO;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instances;
@@ -123,7 +124,13 @@ public class FeatureVector {
         int fileType = ConfigQT.FILE_TYPE;
         //getting data
         if (fileType == ConfigQT.MANUALLY_DATA) {
-            data = FeatureVector.getTrainingData();
+            if (ConfigQT.BUILD_MODEL) {
+                data = FeatureVector.getTrainingData();
+                weka.core.SerializationHelper.write(ConfigQT.packagePath + ConfigQT.DATA_FILE_NAME, data);
+            } else {
+                data = (Instances) weka.core.SerializationHelper.read(ConfigQT.packagePath + ConfigQT.DATA_FILE_NAME);
+            }
+
         } else {
             data = FeatureVector.getTrainingData(ConfigQT.TRAINING_INPUT_FILE, fileType);
         }

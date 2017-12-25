@@ -24,9 +24,9 @@ public class MachineLearning {
 
             if (ConfigQT.BUILD_MODEL) {
                 classifier.buildClassifier(data);
-                weka.core.SerializationHelper.write(ConfigQT.MODEL_FILE_NAME, classifier);
+                weka.core.SerializationHelper.write(ConfigQT.packagePath + ConfigQT.MODEL_FILE_NAME, classifier);
             } else {
-                classifier = (SMO) weka.core.SerializationHelper.read(ConfigQT.MODEL_FILE_NAME);
+                classifier = (SMO) weka.core.SerializationHelper.read(ConfigQT.packagePath +ConfigQT.MODEL_FILE_NAME);
             }
             for (int i = FeatureVector.originalTrainingSize; i < data.size(); i++) {
                 int questionTypeClass = (int)classifier.classifyInstance(data.get(i));
