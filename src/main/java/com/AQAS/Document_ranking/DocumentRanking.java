@@ -1,9 +1,6 @@
 package com.AQAS.Document_ranking;
 
-import com.AQAS.keyphrase_extraction.ConfigKE;
-import com.AQAS.keyphrase_extraction.HelpersKE;
-import com.AQAS.question_processessing.ConfigP;
-import com.AQAS.question_processessing.QuestionPreprocessing;
+import com.AQAS.Database.Form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,23 +16,8 @@ public class DocumentRanking {
 
 
 
-        String[] queryKeyPhrases = HelpersKE.getKeyPhrases(query);
+        String[] queryKeyPhrases = Form.getInstance().getKeyPhrases();
 
-        if (ConfigKE.VERBOS) {
-            System.out.println("Keyphrases List is :");
-            System.out.println(Arrays.toString(queryKeyPhrases));
-        }
-        ArrayList<String> queryKeyPhraseArrayList = new ArrayList<String>(Arrays.asList(queryKeyPhrases));
-        for (String queryKeyPhrase : queryKeyPhrases) {
-            String[] keyPhraseSynonyms = FindSynonyms.getWordSynonyms(queryKeyPhrase);
-            if (ConfigKE.VERBOS) {
-                System.out.println("Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: ");
-                System.out.println(Arrays.asList(keyPhraseSynonyms));
-            }
-            System.out.println("all keyphrases and synonyms");
-            queryKeyPhraseArrayList.addAll(Arrays.asList(keyPhraseSynonyms));
-        }
-        queryKeyPhrases = queryKeyPhraseArrayList.toArray(new String[queryKeyPhraseArrayList.size()]);
         HashMap<String, Double> keyPhrasesFrequencies = HelpersDR.getWordsFreqInDoc(queryKeyPhrases, document);
         double cosineSimilarity = HelpersDR.cosineSimilarity(query, document);
 
