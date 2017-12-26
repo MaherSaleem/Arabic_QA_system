@@ -145,7 +145,7 @@ public class Document implements Comparable<Document> {
     }
 
     public double overAllRank(){
-        return this.contentRank;
+        return this.contentRank / (Math.log(this.urlRank + 1) / Math.log(2));
     }
 
 
