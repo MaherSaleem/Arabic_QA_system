@@ -1,6 +1,7 @@
 package com.AQAS.keyphrase_extraction;
 
 import KPminer.Extractor;
+import com.AQAS.question_processessing.ArabicStemmer;
 import com.AQAS.question_processessing.utilities.TrainedTokenizer;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class HelpersKE {
 
     //TODO: implement this
     private static String[] kpAlternative(String query) {
+
         TrainedTokenizer tok = new TrainedTokenizer();
         String[] tokens = new String[]{};
         try {

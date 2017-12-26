@@ -32,8 +32,8 @@ public final class ConfigQT {
 
     //Classifier model parameters
     public static final boolean BUILD_MODEL = false;
-    public static final String MODEL_FILE_NAME = "machine_learning_model\\smo.model";
-    public static final String DATA_FILE_NAME = "machine_learning_model\\instances.model";
+    public static final String MODEL_FILE_NAME = "machine_learning_model/smo.model";
+    public static final String DATA_FILE_NAME = "machine_learning_model/instances.model";
 
 
     //FeatureVector filter parameters

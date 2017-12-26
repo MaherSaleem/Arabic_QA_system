@@ -14,44 +14,41 @@
 
 package com.AQAS.question_processessing.utilities;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.AQAS.main.HelpersM;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 
 public class TrainedTokenizer {
-public TrainedTokenizer(){}
+    public TrainedTokenizer() {
+    }
 	
 
     public String[] tokenize(String line) throws FileNotFoundException, IOException {
 
         String tokens[] = null;
 
-        InputStream modelIn = new FileInputStream("src\\main\\java\\com\\AQAS\\question_processessing\\arabic-token.bin");
+        InputStream modelIn = HelpersM.getInputStreamFromResrcFile("arabic-token.bin");
+//        InputStream modelIn = new FileInputStream("src\\main\\java\\com\\AQAS\\question_processessing\\arabic-token.bin");
         try {
             TokenizerModel model = new TokenizerModel(modelIn);
             TokenizerME tokenizer = new TokenizerME(model);
             tokens = tokenizer.tokenize(line);
-            } 
-        catch (IOException e) 
-           {
+        } catch (IOException e) {
             e.printStackTrace();
-           } 
-        finally 
-        {
+        } finally {
             if (modelIn != null) {
                 try {
                     modelIn.close();
-                    } 
-                catch (IOException e) {
-                   System.out.println(e.getMessage());
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
                 }
             }
         }
 
         return tokens;
-       }
+    }
 }

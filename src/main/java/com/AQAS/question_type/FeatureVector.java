@@ -2,6 +2,7 @@ package com.AQAS.question_type;
 
 import com.AQAS.Database.Form;
 import com.AQAS.Database.Question;
+import com.AQAS.main.HelpersM;
 import com.AQAS.question_processessing.QuestionPreprocessing;
 import weka.classifiers.functions.SMO;
 import weka.core.Attribute;
@@ -17,6 +18,7 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -128,7 +130,10 @@ public class FeatureVector {
                 data = FeatureVector.getTrainingData();
                 weka.core.SerializationHelper.write(ConfigQT.packagePath + ConfigQT.DATA_FILE_NAME, data);
             } else {
-                data = (Instances) weka.core.SerializationHelper.read(ConfigQT.packagePath + ConfigQT.DATA_FILE_NAME);
+                InputStream inputStream = HelpersM.getInputStreamFromResrcFile(ConfigQT.DATA_FILE_NAME);
+                data = (Instances) weka.core.SerializationHelper.read(inputStream);
+                inputStream.close();
+//                data = (Instances) weka.core.SerializationHelper.read(ConfigQT.packagePath + ConfigQT.DATA_FILE_NAME);
             }
 
         } else {

@@ -1,5 +1,6 @@
 package com.AQAS.synonyms;
 
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -12,7 +13,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -33,9 +34,17 @@ public class AWN
         private List<Map<String,DefaultMutableTreeNode>> nodeDict;
         private int noTree;
         public int count=0;
-        public  AWN(String XMLpath, Boolean dict)
+        public  AWN(InputStream inputStream, Boolean dict)
         {
-            File xmlFile = new File(XMLpath);
+            File xmlFile = new File("tmp.txt");
+            OutputStream outputStream = null;
+            try {
+                outputStream = new FileOutputStream(xmlFile,false);
+                IOUtils.copy(inputStream, outputStream);
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if(xmlFile.exists())
             {
                 try

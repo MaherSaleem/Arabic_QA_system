@@ -40,6 +40,7 @@ public class QuestionPreprocessing {
         }
 
 
+        normalizedText= removedStop;
 //        String normlized_Sttemed_Query = arabicStemmer.outputFilePanelStemButtonActionPerformed();
 //        System.out.println(arabicStemmer.stemmedTextLists.toString());
 

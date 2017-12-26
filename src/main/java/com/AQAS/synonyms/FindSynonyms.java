@@ -10,7 +10,8 @@ public class FindSynonyms
    
     public static String [] getWordSynonyms(String word){
         ArrayList<String> SynsetList = new ArrayList<>();
-        AWN awn=new AWN ("src/main/java/com/AQAS/synonyms/awn.xml",false);
+        AWN awn=new AWN (HelpersM.getInputStreamFromResrcFile("awn.xml"),false);
+//        AWN awn=new AWN ("src/main/java/com/AQAS/synonyms/awn.xml",false);
         List<String> listWordId= awn.Get_List_Word_Id_From_Value(word);
         for(int i = 0; i< listWordId.size();i++){
             System.out.println("Word ID: " + listWordId.get(i) +" Word Value: " + awn.Get_Word_Value_From_Word_Id(listWordId.get(i)));
