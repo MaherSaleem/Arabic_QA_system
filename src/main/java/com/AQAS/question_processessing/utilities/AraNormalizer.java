@@ -40,7 +40,7 @@ public class AraNormalizer {
 	    	 ctoken=ctoken.replace(Constants.ALIF_MADDA, Constants.ALIF);
 	    	 
 	    	 // normalization of taa  marbutah to haa   
-	    	 ctoken=ctoken.replace(Constants.TAA_MARBUTA, Constants.HAA);
+//	    	 ctoken=ctoken.replace(Constants.TAA_MARBUTA, Constants.HAA);
 	    	 
 	    	 // normalization of yaa to dotless yaa
 	    	 ctoken=ctoken.replace(Constants.DOTLESS_YAA, Constants.YAA);

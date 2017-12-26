@@ -1,11 +1,13 @@
 package com.AQAS.synonyms;
 
+import com.AQAS.main.HelpersM;
+
 import java.util.List;
 
 public class awnMain {
     public static void main(String[] args)
     {
-        AWN awn=new AWN ("src/main/java/com/AQAS/synonyms/awn.xml",false);
+        AWN awn=new AWN (HelpersM.getInputStreamFromResrcFile("awn.xml"),false);
         List<String> ItemID= awn.Get_Item_Id_From_Name("سبب");
         for(int i = 0; i< ItemID.size();i++){
             System.out.println("Item ID: " + ItemID.get(i) +" Item Name: " + awn.Get_Name_Of_Item_From_Item_Id(ItemID.get(i)));

@@ -4,6 +4,7 @@ import com.AQAS.Document_ranking.DocumentRanking;
 import com.AQAS.document_retrieval.DocumentRetrieval;
 import com.AQAS.document_retrieval.Website_Document;
 import com.AQAS.main.ConfigM;
+import com.AQAS.main.HelpersM;
 import com.AQAS.question_processessing.ConfigP;
 import com.AQAS.question_processessing.QuestionPreprocessing;
 import org.json.simple.JSONObject;
@@ -12,6 +13,7 @@ import org.jsoup.Jsoup;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -55,9 +57,10 @@ public class HelpersDB {
 
     public static void intializeProb() {
         props = new Properties();
-        FileInputStream fis = null;
+        InputStream fis = null;
         try {
-            fis = new FileInputStream(System.getProperty("user.dir") + "/src/main/java/com/AQAS/Database/" + "/db.properties");
+
+            fis = HelpersM.getInputStreamFromResrcFile("db.properties");
             props.load(fis);
 
         } catch (Exception e) {

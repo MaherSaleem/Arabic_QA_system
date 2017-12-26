@@ -7,8 +7,9 @@ import com.AQAS.Database.HelpersDB;
 import com.AQAS.document_retrieval.DocumentRetrieval;
 import com.AQAS.question_processessing.ConfigP;
 import com.AQAS.question_processessing.QuestionPreprocessing;
+import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import static com.AQAS.Database.HelpersDB.intializeProb;
@@ -20,6 +21,7 @@ import static com.AQAS.question_type.HelpersQT.getQuestionTypeUsingSVM;
 public class Driver {
 
     public static void main(String[] args) throws IOException {
+
 
         intializeProb();
 

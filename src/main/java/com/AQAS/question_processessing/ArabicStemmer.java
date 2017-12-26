@@ -25,6 +25,7 @@ s.Khoja@lancaster.ac.uk
 
 */
 
+import com.AQAS.main.HelpersM;
 import com.AQAS.question_processessing.utilities.AraNormalizer;
 import com.AQAS.question_processessing.utilities.DiacriticsRemover;
 import com.AQAS.question_processessing.utilities.PunctuationsRemover;
@@ -805,7 +806,8 @@ public class ArabicStemmer
     protected void readInStaticFiles ( )
     {
         // create a string buffer containing the path to the static files
-        String pathToStemmerFiles = new StringBuffer ( System.getProperty ( "user.dir" ) + System.getProperty ( "file.separator" ) + "src"  + System.getProperty ( "file.separator" ) + "main" +System.getProperty ( "file.separator" ) + "java" + System.getProperty ( "file.separator" ) + "com" + System.getProperty ( "file.separator" ) + "AQAS" + System.getProperty ( "file.separator" ) + "question_processessing" + System.getProperty ( "file.separator" ) + "StemmerFiles" +System.getProperty ( "file.separator" ) ).toString ( );
+//        String pathToStemmerFiles = new StringBuffer ( System.getProperty ( "user.dir" ) + System.getProperty ( "file.separator" ) + "src"  + System.getProperty ( "file.separator" ) + "main" +System.getProperty ( "file.separator" ) + "java" + System.getProperty ( "file.separator" ) + "com" + System.getProperty ( "file.separator" ) + "AQAS" + System.getProperty ( "file.separator" ) + "question_processessing" + System.getProperty ( "file.separator" ) + "StemmerFiles" +System.getProperty ( "file.separator" ) ).toString ( );
+        String  pathToStemmerFiles = "StemmerFiles/";
 
         // create the vector composed of vectors containing the static files
         staticFiles = new Vector ( );
@@ -847,8 +849,9 @@ public class ArabicStemmer
             Vector vectorFromFile = new Vector ( );
 
             // create a buffered reader
-            File file = new File ( fileName );
-            FileInputStream fileInputStream = new FileInputStream ( file );
+//            File file = new File ( fileName );
+//            FileInputStream fileInputStream = new FileInputStream ( file );
+            InputStream fileInputStream = HelpersM.getInputStreamFromResrcFile(fileName);;
             InputStreamReader inputStreamReader = new InputStreamReader ( fileInputStream, "UTF-16" );
 
             //If the bufferedReader is not big enough for a file, I should change the size of it here

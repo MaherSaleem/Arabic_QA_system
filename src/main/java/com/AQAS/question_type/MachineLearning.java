@@ -1,9 +1,11 @@
 package com.AQAS.question_type;
 
+import com.AQAS.main.HelpersM;
 import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.functions.SMO;
 import weka.core.Instances;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -26,7 +28,10 @@ public class MachineLearning {
                 classifier.buildClassifier(data);
                 weka.core.SerializationHelper.write(ConfigQT.packagePath + ConfigQT.MODEL_FILE_NAME, classifier);
             } else {
-                classifier = (SMO) weka.core.SerializationHelper.read(ConfigQT.packagePath +ConfigQT.MODEL_FILE_NAME);
+                InputStream inputStream = HelpersM.getInputStreamFromResrcFile(ConfigQT.MODEL_FILE_NAME);
+                classifier = (SMO) weka.core.SerializationHelper.read(inputStream);
+                inputStream.close();
+//                classifier = (SMO) weka.core.SerializationHelper.read(ConfigQT.packagePath +ConfigQT.MODEL_FILE_NAME);
             }
             for (int i = FeatureVector.originalTrainingSize; i < data.size(); i++) {
                 int questionTypeClass = (int)classifier.classifyInstance(data.get(i));

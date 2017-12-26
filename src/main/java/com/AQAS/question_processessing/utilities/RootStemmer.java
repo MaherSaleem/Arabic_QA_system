@@ -15,10 +15,9 @@
 
 package com.AQAS.question_processessing.utilities;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import com.AQAS.main.HelpersM;
+
+import java.io.*;
 import java.util.Vector;
 
 public class RootStemmer {
@@ -31,8 +30,8 @@ public class RootStemmer {
     private static String roots="";
 
     private static Vector<Vector<String>> staticFiles ;
-    static String  pathToStemmerFiles = new StringBuffer ( System.getProperty ( "user.dir" ) + System.getProperty ( "file.separator" ) + "StemmerFiles" + System.getProperty ( "file.separator" ) ).toString ( );
-    
+//    static String  pathToStemmerFiles = new StringBuffer ( System.getProperty ( "user.dir" ) + System.getProperty ( "file.separator" ) + "StemmerFiles" + System.getProperty ( "file.separator" ) ).toString ( );
+    static String  pathToStemmerFiles = "StemmerFiles/";
 
 
 	public static String getRoots() {
@@ -684,8 +683,10 @@ public class RootStemmer {
         {
             Vector vectorFromFile = new Vector ( );
 
-            File file = new File ( fileName );
-            FileInputStream fileInputStream = new FileInputStream ( file );
+//            File file = new File ( fileName );
+//            FileInputStream fileInputStream = new FileInputStream ( file );
+
+            InputStream fileInputStream = HelpersM.getInputStreamFromResrcFile(fileName);
             InputStreamReader inputStreamReader = new InputStreamReader ( fileInputStream, "UTF-16" );
             BufferedReader bufferedReader = new BufferedReader ( inputStreamReader, 20000 );
 
