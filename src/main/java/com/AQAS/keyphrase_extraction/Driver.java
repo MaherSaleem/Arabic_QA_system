@@ -23,9 +23,7 @@ public class Driver {
         }
         System.out.println("NORM: "+normalizedQuery);
 
-        //TODO: Do the alternative strategy [getKeyPhrases]
-        String[] topKeys = HelpersKE.getKeyPhrases(query);
-//        String[] topNkeys = kp.keyphraseInput(1,"What is the reason that cause cancer",false);
+        String[] topKeys = HelpersKE.getKeyPhrases(normalizedQuery);
 
         for (int i = 0; i < topKeys.length; i++) {
             System.out.println(topKeys[i]);

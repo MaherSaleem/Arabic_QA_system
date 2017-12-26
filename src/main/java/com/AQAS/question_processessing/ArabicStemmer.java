@@ -82,7 +82,7 @@ public class ArabicStemmer
     }
 
 
-    ArabicStemmer ()
+    public ArabicStemmer()
     {
         // create the gui
 //        arabicStemmerGUI = new ArabicStemmerGUI ( this );
@@ -93,7 +93,7 @@ public class ArabicStemmer
 //        this.outputFilePanelStemButtonActionPerformed();
     }
 
-    protected String removeStopWords(String[] tokens)
+    public String removeStopWords(String[] tokens)
     { String removedStop = "";
 
         for(int i= 0 ; i<tokens.length ; i++)
