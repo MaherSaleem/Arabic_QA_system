@@ -10,7 +10,7 @@ public final class ConfigM {
     public static final boolean VERBOS = true;
     
     public static final boolean BUILD_DB = false;
-    public static final boolean DATABASE_QUERY = true;
+    public static final boolean DATABASE_QUERY = false;
     public final static int questionId = 2;
 
 

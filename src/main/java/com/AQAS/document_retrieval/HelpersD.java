@@ -44,8 +44,15 @@ public final class HelpersD {
     public static void openWebDriver() {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setJavascriptEnabled(true);
-        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, System.getProperty("user.dir") + "/exec/phantomjs.exe");
-        driver = new PhantomJSDriver(caps);
+        try{
+            caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, System.getProperty("user.dir") + "/exec/phantomjs.exe");
+            driver = new PhantomJSDriver(caps);
+
+        }catch(Exception e){
+            caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,  "jars/exec/phantomjs.exe");
+            driver = new PhantomJSDriver(caps);
+
+        }
 
     }
 

@@ -14,7 +14,8 @@ public class Driver {
     public static void main(String[] args) throws Exception {
         ArrayList<String> testingQuestions = new ArrayList<String>(Arrays.asList(
                 "كم مدة علاج السعال",
-                "ما هي أعراض السعال"
+                "ما هي اعراض الاصابة بمرض السكري",
+                "ما هو مرض السعال"
         ));
 
         getQuestionTypeUsingSVM(testingQuestions);

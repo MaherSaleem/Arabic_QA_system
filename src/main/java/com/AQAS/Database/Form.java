@@ -266,8 +266,6 @@ public class Form {
     }
 
 
-
-
     /*
    *
    * this will generate the segments for each document in a form
@@ -276,6 +274,7 @@ public class Form {
 
         ArrayList<Segment> tempTopSegmentsByOrder = new ArrayList<>();
         String[] questionKeyPhrases = this.getKeyPhrases();
+        int orderSegmentsToTake = (int) Math.ceil((double) ConfigAE.topN.DEFINITION / (double) this.documents.size());
         for (Document document : this.documents) {
             document.generateDocumentSegments(questionKeyPhrases, null);
             document.calculateSegmentsRanks(this);
@@ -289,8 +288,10 @@ public class Form {
             });
 
 //            tempTopSegmentsByOrder.addAll(document.segments.subList(0, ConfigAE.TOP_SEGMENTS_BY_ORDER));
-            if(document.segments.size() > 0){
-                tempTopSegmentsByOrder.addAll(document.segments.subList(0, (int) Math.ceil((double)ConfigAE.topN.DEFINITION/(double)this.documents.size())));
+            if (document.segments.size() > orderSegmentsToTake) {
+                tempTopSegmentsByOrder.addAll(document.segments.subList(0, orderSegmentsToTake));
+            } else {
+                tempTopSegmentsByOrder.addAll(document.segments);
             }
 
 //            //just printing

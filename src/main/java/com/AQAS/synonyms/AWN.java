@@ -82,8 +82,9 @@ public class AWN
                 frame = new JFrame("Form1");
                 JOptionPane.showMessageDialog(frame ,"couldn't find the sourse XML file","error", JOptionPane.ERROR_MESSAGE);
             }
+            xmlFile.delete();
         }
-        
+
       private void clear()
         {
             itemDict = new HashMap<String ,Item>();

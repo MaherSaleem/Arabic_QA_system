@@ -5,6 +5,7 @@ import com.AQAS.keyphrase_extraction.HelpersKE;
 import com.AQAS.main.ConfigM;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import java.io.IOException;
@@ -51,6 +52,20 @@ public class DocumentRetrieval {
             showMoreButton.click();
         } catch (Exception e) {
         }
+        try {
+            JavascriptExecutor js;
+            if (driver instanceof JavascriptExecutor) {
+                js = (JavascriptExecutor) driver;
+                js.executeScript("var element = document.querySelector(\".article-top\");if (element)\n" + "    element.parentNode.removeChild(element);");
+                js.executeScript("var element = document.querySelector(\".article-bottom\");if (element)\n" + "    element.parentNode.removeChild(element);");
+                js.executeScript("var element = document.querySelector(\".jump-links\");if (element)\n" + "    element.parentNode.parentNode.removeChild(element.parentNode);");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Not Worked");
+        }
+
+
         WebElement we;
         try {
              we = driver.findElement(By.cssSelector(contentSelector));

@@ -168,8 +168,6 @@ class Google extends Website {
             if (Arrays.stream(ConfigD.unwantedWebsites).parallel().noneMatch(link::contains)) {
                 links.add(link);
             }
-            //Another solution(using loop)
-            //TODO add it if you want
         }
         return links;
     }
