@@ -108,13 +108,14 @@ public class DocumentRetrieval {
         for (Website_Document website_document : website_documents) {
             int urlOrder = 1;
             for (String url : website_document.DocumentLinks) {
+                String text = DocumentRetrieval.retrieveDocumentText(url, website_document.websiteContentSelector);
                 if (ConfigM.VERBOS) {
                     System.out.println("Link is :" + url);
+                    System.out.println(text);
                 }
-                String text = DocumentRetrieval.retrieveDocumentText(url, website_document.websiteContentSelector);
-                System.out.println(text);
-                Document document = new Document(url, text, urlOrder++);
+                Document document = new Document(url, text, urlOrder);
                 document.setKeyPhases( HelpersKE.getKeyPhrases(text));
+                document.setDocName(website_document.getSourceWebsite()+"_"+urlOrder++);
                 documents.add(document);
             }
         }

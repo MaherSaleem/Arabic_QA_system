@@ -33,6 +33,7 @@ public class SeleniumTests {
 
         WebElement we = driver.findElement(By.tagName("body"));
 
+
         System.out.println(we.getText());
         //to remove null (elements that have the selector but doesn't have href)
         driver.quit();

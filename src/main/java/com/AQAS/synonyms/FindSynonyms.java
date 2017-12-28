@@ -1,5 +1,6 @@
 package com.AQAS.synonyms;
 
+import com.AQAS.main.ConfigM;
 import com.AQAS.main.HelpersM;
 
 import java.util.ArrayList;
@@ -14,7 +15,9 @@ public class FindSynonyms
 //        AWN awn=new AWN ("src/main/java/com/AQAS/synonyms/awn.xml",false);
         List<String> listWordId= awn.Get_List_Word_Id_From_Value(word);
         for(int i = 0; i< listWordId.size();i++){
-            System.out.println("Word ID: " + listWordId.get(i) +" Word Value: " + awn.Get_Word_Value_From_Word_Id(listWordId.get(i)));
+            if(ConfigM.VERBOS){
+                System.out.println("Word ID: " + listWordId.get(i) +" Word Value: " + awn.Get_Word_Value_From_Word_Id(listWordId.get(i)));
+            }
             String SynsetID= awn.Get_Synset_ID_From_Word_Id(listWordId.get(i));
             List<String> listWordIdFromSynsent=awn.Get_List_Word_Id_From_Synset_ID(SynsetID);
             for(int j = 0; j< listWordIdFromSynsent.size();j++) {

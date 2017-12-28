@@ -29,9 +29,9 @@ public class HelpersQT {
         }
         if (ConfigM.VERBOSE_LOG) {
             for (int i = 0; i < result.size(); i++) {
-                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/quesetion_types.log", "question is:" + testingQuestions.get(i));
-                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/quesetion_types.log", "question type is:" + ConfigQT.QT_texts[result.get(i)]);
-                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/quesetion_types.log", "=================================");
+                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/question_types.log", "question is:" + testingQuestions.get(i));
+                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/question_types.log", "question type is:" + ConfigQT.QT_texts[result.get(i)]);
+                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/question_types.log", "=================================");
             }
         }
         return result;

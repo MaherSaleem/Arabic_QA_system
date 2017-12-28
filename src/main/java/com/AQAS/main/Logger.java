@@ -28,7 +28,7 @@ public class Logger {
         initializeLogger();
     }
 
-    private void createDirectory(String name) {
+    public void createDirectory(String name) {
         File theDir = new File(name);
 
         // if the directory does not exist, create it
@@ -74,7 +74,7 @@ public class Logger {
         this.folderName = "Logs/" + folderName;
     }
 
-    private String getFullPath(String path) {
+    public String getFullPath(String path) {
         return this.folderName + "/" + path;
     }
 
@@ -82,6 +82,7 @@ public class Logger {
         PrintWriter out = null;
         try {
             File file = new File(getFullPath(path));
+            file.getParentFile().mkdirs();//make parent directory if not exist
 
             if (!file.exists()) {
                 file.createNewFile();

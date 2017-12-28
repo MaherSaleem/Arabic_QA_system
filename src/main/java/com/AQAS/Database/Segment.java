@@ -1,7 +1,8 @@
- package com.AQAS.Database;
+package com.AQAS.Database;
 
 import com.AQAS.Document_ranking.DocumentRanking;
 import com.AQAS.main.HelpersM;
+import com.AQAS.main.Logger;
 import com.AQAS.passages_segmentation.ConfigPS;
 import com.AQAS.question_type.ConfigQT;
 
@@ -9,10 +10,11 @@ import java.io.*;
 import java.util.ArrayList;
 
 
-public class Segment  implements Comparable<Segment>{
+public class Segment implements Comparable<Segment> {
     public String text;
     public double rank;
     public int segmentOrder;
+    public String serialNum;
 
 
     public Segment(String text) {
@@ -23,6 +25,7 @@ public class Segment  implements Comparable<Segment>{
         this.text = text;
         this.rank = rank;
     }
+
     public Segment(String text, double rank, int segmentOrder) {
         this.text = text;
         this.rank = rank;
@@ -53,6 +56,14 @@ public class Segment  implements Comparable<Segment>{
         this.segmentOrder = segmentOrder;
     }
 
+    public String getSerialNum() {
+        return serialNum;
+    }
+
+    public void setSerialNum(String serialNum) {
+        this.serialNum = serialNum;
+    }
+
     @Override
     public String toString() {
         return "Segment{" +
@@ -71,10 +82,9 @@ public class Segment  implements Comparable<Segment>{
         double documentRankScore = 0;
         //if segment doesnt contain the question type => rank = 0
         double rank = 0;
-        if(questionTypeScore == 0){
+        if (questionTypeScore == 0) {
             rank = 0;
-        }
-        else{
+        } else {
             keyPhrasesScore = findKeyPhrasesScore(form.text);
             documentRankScore = document.overAllRank();
             rank = ConfigPS.weights.A * questionTypeScore + ConfigPS.weights.B * keyPhrasesScore + ConfigPS.weights.C * documentRankScore;
@@ -167,11 +177,10 @@ public class Segment  implements Comparable<Segment>{
             if (3 <= wordsCount && wordsCount <= 5) {
                 shortSentencesCount++;
                 longestSequence++;
-                if(longestSequence == 3){
+                if (longestSequence == 3) {
                     return true;
                 }
-            }
-            else{
+            } else {
                 longestSequence = 0;
             }
         }
@@ -187,6 +196,40 @@ return ordered document depending on content rank, Sorting descending
     public int compareTo(Segment s) {
         double diff = (this.getRank() - s.getRank());
         return diff != 0 ? (diff > 0 ? -1 : 1) : 0;
+    }
+
+    public void log(String filePath) {
+        String fileName = filePath+ "/" + this.getSerialNum() + ".log";
+
+        try {
+            Logger.getInstance().log(fileName, "Segment Types: " + this.getSegmentTypes());
+            Logger.getInstance().log(fileName, "Rank: " + this.rank);
+            Logger.getInstance().log(fileName, "Segment Order: " + this.segmentOrder);
+            Logger.getInstance().log(fileName, "Text: \n" + this.text);
+            Logger.getInstance().log(fileName, "===================================================");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getSegmentTypes() {
+        String STRtypes = "";
+        ArrayList<Integer> types = this.findSegmentTypes();
+        for (int type : types) {
+            switch (type) {
+                case 0:
+                    STRtypes += "NUMERIC, ";
+                    break;
+                case 1:
+                    STRtypes+="LIST, ";
+                    break;
+
+                case 2:
+                    STRtypes+="PARAGRAPH";
+                    break;
+            }
+        }
+        return STRtypes;
     }
 
 

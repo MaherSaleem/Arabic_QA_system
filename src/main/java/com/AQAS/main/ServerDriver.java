@@ -30,6 +30,7 @@ public class ServerDriver {
         BufferedWriter outJsonFile = null;
         Logger logger = new Logger(fileName);
 
+
         //reading query
         File fileDir = new File(fileName);
         BufferedReader in = new BufferedReader(
@@ -85,21 +86,37 @@ public class ServerDriver {
         }
         Collections.sort(form.documents);// uses CompareTo in order to sort the document according to their contentRank
 
-        System.out.println("After sorting Documents: " + form);
+        if (ConfigM.VERBOS) {
+            System.out.println("After sorting Documents: " + form);
+        }
+        if (ConfigM.VERBOSE_LOG) {
+            form.logDocuments(ConfigM.LogFolders.DOC_RETRIEVAL+"/BEFORE_FILTERING");
+        }
 
         if (ConfigM.VERBOS) {
             System.out.println("***5");
         }
         form.removeIrrelevantDocuments();
 
+        if (ConfigM.VERBOSE_LOG) {
+            form.logDocuments(ConfigM.LogFolders.DOC_RETRIEVAL+"/AFTER_FILTERING");
+        }
+
         if (ConfigM.VERBOS) {
             System.out.println("***6");
         }
         form.generateFormDocumentsSegments();
+
         if (ConfigM.VERBOS) {
             System.out.println("***7");
         }
         form.extractAnswer();
+
+        if (ConfigM.VERBOSE_LOG) {
+            for (Answer answer : form.getAnswers()) {
+                answer.log(ConfigM.LogFolders.ANSWER_EXTRACTION );
+            }
+        }
 //        System.out.println("After Remove irrelevant: " + form);
         closeWebDriver();
         if (ConfigM.VERBOS) {

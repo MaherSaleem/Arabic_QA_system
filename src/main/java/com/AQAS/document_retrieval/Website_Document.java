@@ -20,4 +20,28 @@ public class Website_Document {
 //        al.addAll(hs);
         this.DocumentLinks.removeAll(a);
     }
+
+    public String getWebsiteContentSelector() {
+        return websiteContentSelector;
+    }
+
+    public void setWebsiteContentSelector(String websiteContentSelector) {
+        this.websiteContentSelector = websiteContentSelector;
+    }
+
+    public ArrayList<String> getDocumentLinks() {
+        return DocumentLinks;
+    }
+
+    public void setDocumentLinks(ArrayList<String> documentLinks) {
+        DocumentLinks = documentLinks;
+    }
+
+    public String getSourceWebsite() {
+        return sourceWebsite;
+    }
+
+    public void setSourceWebsite(String sourceWebsite) {
+        this.sourceWebsite = sourceWebsite;
+    }
 }

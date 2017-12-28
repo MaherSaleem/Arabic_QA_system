@@ -1,5 +1,7 @@
 package com.AQAS.Database;
 
+import com.AQAS.main.ConfigM;
+import com.AQAS.main.Logger;
 import com.AQAS.passages_segmentation.ConfigPS;
 import com.AQAS.passages_segmentation.PassageSegmentation;
 import org.jsoup.Jsoup;
@@ -22,6 +24,7 @@ public class Document implements Comparable<Document> {
     double contentRank;
     ArrayList<Segment> segments = new ArrayList<Segment>();
     String[] keyPhases ;
+    String docName;
 
     public Document(String link, String text) {
         this.link = link;
@@ -127,6 +130,14 @@ public class Document implements Comparable<Document> {
         this.keyPhases = keyPhases;
     }
 
+    public String getDocName() {
+        return docName;
+    }
+
+    public void setDocName(String docName) {
+        this.docName = docName;
+    }
+
     public int store() {
         try {
             org.jsoup.nodes.Document doc = Jsoup.connect(props.getProperty("LOCAL_SERVER_IP") + "forms/document/" + this.form_id)
@@ -188,14 +199,17 @@ public class Document implements Comparable<Document> {
 
 
         //just printing
-        for (String sentence : documentSentences) {
-            System.out.println(sentence);
-            System.out.println("=============================================");
+        if(ConfigM.VERBOS){
+            for (String sentence : documentSentences) {
+                System.out.println(sentence);
+                System.out.println("=============================================");
+            }
         }
         int state = ConfigPS.STATE_END;
         int sentencesSize = documentSentences.length;
         int startIndex = 0;
         int endIndex = 0;
+        int count = 1;
         ArrayList<Segment> segments = new ArrayList<>();
         for (int i = 0; i < sentencesSize; i++) {
             String si = documentSentences[i];
@@ -223,10 +237,16 @@ public class Document implements Comparable<Document> {
                 if (state == ConfigPS.STATE_LAST_SENTENCE) {
                     int LastSegmentIndex = segments.size() - 1;
                     segmentString += documentSentences[sentencesSize - 1];
-                    segments.set(LastSegmentIndex, new Segment(segments.get(LastSegmentIndex).text + ". " + segmentString));
+                    Segment segment =  new Segment(segments.get(LastSegmentIndex).text + ". " + segmentString);
+                    segment.setSerialNum(this.getDocName()+"__"+count++);
+                    segments.set(LastSegmentIndex,segment);
                 } else {
-                    System.out.println(segments.size());
-                    segments.add(new Segment(segmentString));
+                    if(ConfigM.VERBOS){
+                        System.out.println(segments.size());
+                    }
+                    Segment segment = new Segment(segmentString);
+                    segment.setSerialNum(this.getDocName()+"__"+count++);
+                    segments.add(segment);
                 }
             }
 
@@ -275,4 +295,25 @@ public class Document implements Comparable<Document> {
             segment.setSegmentOrder(i++);
         }
     }
+
+    public void log(String filePath){
+        String fileName = filePath+ "/" + this.getDocName() + ".log";
+        try {
+            Logger.getInstance().log(fileName, "Link: "+this.link);
+            Logger.getInstance().log(fileName, "URL Rank: "+this.urlRank);
+            Logger.getInstance().log(fileName, "Content Rank: "+this.contentRank);
+            Logger.getInstance().log(fileName, "OVERALL Rank: "+this.overAllRank());
+            Logger.getInstance().log(fileName, "Text: \n"+this.text);
+            Logger.getInstance().log(fileName, "===================================================");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void logSegments(String folderPath) {
+        for (Segment segment : this.segments) {
+            segment.log(folderPath);
+        }
+    }
+
 }

@@ -17,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
 
+import javax.print.Doc;
 import java.io.*;
 import java.util.*;
 
@@ -44,7 +45,6 @@ public class Form {
         }
         return singletonForm;
     }
-
 
 
     public Form() {
@@ -101,7 +101,7 @@ public class Form {
     public void setKeyPhrases() throws IOException {
         String[] queryKeyPhrases = HelpersKE.getKeyPhrases(this.normalizedText);
 
-        if (ConfigM.VERBOSE_LOG){
+        if (ConfigM.VERBOSE_LOG) {
             Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases.log", Arrays.toString(queryKeyPhrases));
         }
         if (ConfigM.VERBOS) {
@@ -113,8 +113,8 @@ public class Form {
             if (ConfigM.VERBOS) {
                 System.out.println("Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
             }
-            if (ConfigM.VERBOSE_LOG){
-                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/synonyms.log","Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
+            if (ConfigM.VERBOSE_LOG) {
+                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/synonyms.log", "Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
 
             }
             queryKeyPhraseArrayList.addAll(Arrays.asList(keyPhraseSynonyms));
@@ -123,6 +123,7 @@ public class Form {
 
         this.keyPhrases = queryKeyPhrases;
     }
+
     public String[] getKeyPhrases() throws IOException {
         if (this.keyPhrases == null) {
             this.setKeyPhrases();
@@ -156,7 +157,7 @@ public class Form {
         return null;
     }
 
-    public ArrayList<Document> getDocuments() {
+    public ArrayList<Document> getDocuments() {//from database
         try {
             String json = Jsoup.connect(props.getProperty("LOCAL_SERVER_IP") + "/forms/document/" + this.id).ignoreContentType(true).execute().body();
             // System.out.println("JSON: "+json);
@@ -166,6 +167,7 @@ public class Form {
 
             JSONArray jsonArray = (JSONArray) obj;
             Iterator<JSONObject> iterator = jsonArray.iterator();
+            int count = 1;
             while (iterator.hasNext()) {
                 JSONObject tmp = iterator.next();
                 String link = (String) tmp.get("link");
@@ -174,7 +176,9 @@ public class Form {
                 JSONObject pivot = (JSONObject) tmp.get("pivot");
 
                 double urltRank = Double.parseDouble(pivot.get("urlRank") + "");
-                this.documents.add(new Document(document_id, link, text, this.id, urltRank));
+                Document document = new Document(document_id, link, text, this.id, urltRank);
+                document.setDocName("" + count++);
+                this.documents.add(document);
 
             }
 
@@ -216,7 +220,16 @@ public class Form {
 
     public void removeIrrelevantDocuments() {
         double relevancyThreshold = getRelevancyThreshold();
-        System.out.println("Choosen Threshold is :" + relevancyThreshold);
+        if (ConfigM.VERBOSE_LOG) {
+            try {
+                Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/threshold.log", "Threshold:\n" + relevancyThreshold);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (ConfigM.VERBOS) {
+            System.out.println("Choosen Threshold is :" + relevancyThreshold);
+        }
         for (Iterator<Document> document = documents.iterator(); document.hasNext(); ) {
             if (document.next().overAllRank() < relevancyThreshold) {
                 document.remove();
@@ -287,7 +300,18 @@ public class Form {
             document.generateDocumentSegments(questionKeyPhrases, null);
             document.calculateSegmentsRanks(this);
             document.setSegmentsOrder();
+
+            if (ConfigM.VERBOSE_LOG) {
+                document.log(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/" + document.getDocName());
+                document.logSegments(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/" + document.getDocName() + "/BEFORE_FILTRATION");
+            }
+
+
             document.removeIrrelevantSegments();
+
+            if (ConfigM.VERBOSE_LOG) {
+                document.logSegments(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/" + document.getDocName() + "/AFTER_FILTRATION");
+            }
 
             //Get top N segments according to their order in the document
             Collections.sort(document.segments, (o1, o2) -> {
@@ -333,9 +357,21 @@ public class Form {
         Collections.sort(tempTopSegments);
         this.setTopSegmentsByRank(tempTopSegments);//best segments in all documents
 
+        if(ConfigM.VERBOSE_LOG){
+            for (Segment segment: this.topSegmentsByRank) {
+                segment.log(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/TOP_SEGMENTS_BY_RANK");
+            }
+        }
+
+
         Collections.sort(tempTopSegmentsByOrder);
         this.setTopSegmentsByOrder(tempTopSegmentsByOrder);
 
+        if(ConfigM.VERBOSE_LOG){
+            for (Segment segment: this.topSegmentsByOrder) {
+                segment.log(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/TOP_SEGMENTS_BY_ORDER");
+            }
+        }
 
     }
 
@@ -412,11 +448,7 @@ public class Form {
                 }
                 break;
         }
-        if (ConfigM.VERBOSE_LOG) {
-            for (Answer answer : this.answers) {
-                answer.log("answers");
-            }
-        }
+
         if (ConfigM.VERBOS) {
             this.printAnswers();
         }
@@ -436,5 +468,13 @@ public class Form {
             double contentRank = DocumentRanking.getDocumentRank(document.text, this.normalizedText);
             document.setContentRank(contentRank);
         }
+    }
+
+
+    public void logDocuments(String folderPath) {
+        for (Document document : this.documents) {
+            document.log(folderPath);
+        }
+
     }
 }

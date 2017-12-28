@@ -56,15 +56,15 @@ public class Answer implements Comparable<Answer> {
                 '}';
     }
 
-    public void log(String fileName) {
-        if (fileName == null) {
-            fileName = "answer_" + this.rank;
+    public void log(String filePath) {
+        if (filePath == null) {
+            filePath = ConfigM.LogFolders.ANSWER_EXTRACTION;
         }
-        fileName +=".log";
+        String fileName = filePath+ "/answers.log";
         try {
-            Logger.getInstance().log(ConfigM.LogFolders.ANSWER_EXTRACTION + "/"+fileName, "Rank: "+ this.rank);
-            Logger.getInstance().log(ConfigM.LogFolders.ANSWER_EXTRACTION + "/"+fileName, "Text:\n "+ this.text);
-            Logger.getInstance().log(ConfigM.LogFolders.ANSWER_EXTRACTION + "/"+fileName, "\n====================\n");
+            Logger.getInstance().log(fileName, "Rank: "+ this.rank);
+            Logger.getInstance().log(fileName, "Text:\n "+ this.text);
+            Logger.getInstance().log(fileName, "\n====================\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
