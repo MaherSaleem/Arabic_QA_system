@@ -24,9 +24,12 @@ import static com.AQAS.question_type.HelpersQT.getQuestionTypeUsingSVM;
 public class ServerDriver {
     public static void main(String[] args) throws IOException {
 
+
         String questionQuery = args[0];
         String fileName = args[1];
         BufferedWriter outJsonFile = null;
+        Logger logger = new Logger(fileName);
+        logger.log(ConfigM.LogFolders.PREPROCESSING+"/file.log", "تجربة مسج جديدة");
 
         //reading query
         File fileDir = new File(fileName);

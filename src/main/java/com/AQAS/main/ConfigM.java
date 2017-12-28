@@ -7,6 +7,14 @@ public final class ConfigM {
     public final class Keys {
     }
 
+    public interface LogFolders {
+        String PREPROCESSING = "preprocessing";
+        String DOC_RETRIEVAL = "docRetrieval";
+        String PASSAGE_EXTRACTION = "passageExtraction";
+        String ANSWER_EXTRACTION = "answerExtraction";
+
+    }
+
     public static final boolean VERBOS = true;
     
     public static final boolean BUILD_DB = false;
