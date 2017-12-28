@@ -1,6 +1,11 @@
 package com.AQAS.Database;
 
-public class Answer implements Comparable<Answer>{
+import com.AQAS.main.ConfigM;
+import com.AQAS.main.Logger;
+
+import java.io.IOException;
+
+public class Answer implements Comparable<Answer> {
 
     public String text;
     public double rank;
@@ -34,7 +39,6 @@ public class Answer implements Comparable<Answer>{
     }
 
 
-
     /*
    return ordered answers depending on content rank, Sorting descending
     */
@@ -50,5 +54,20 @@ public class Answer implements Comparable<Answer>{
                 "text='" + text + '\'' +
                 ", rank=" + rank +
                 '}';
+    }
+
+    public void log(String fileName) {
+        if (fileName == null) {
+            fileName = "answer_" + this.rank;
+        }
+        fileName +=".log";
+        try {
+            Logger.getInstance().log(ConfigM.LogFolders.ANSWER_EXTRACTION + "/"+fileName, "Rank: "+ this.rank);
+            Logger.getInstance().log(ConfigM.LogFolders.ANSWER_EXTRACTION + "/"+fileName, "Text:\n "+ this.text);
+            Logger.getInstance().log(ConfigM.LogFolders.ANSWER_EXTRACTION + "/"+fileName, "\n====================\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

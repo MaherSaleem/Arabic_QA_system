@@ -12,12 +12,15 @@ public class Logger {
     private static Logger ourInstance = null;
 
     public static Logger getInstance() {
+        if(ourInstance == null){
+            ourInstance = new Logger("tmp");
+        }
         return ourInstance;
     }
 
-    private Logger() {
-        ourInstance = new Logger();
-    }
+//    private Logger() {
+//        ourInstance = new Logger();
+//    }
 
     public Logger(String folderName) {
         this.folderName = "Logs/" + folderName;
@@ -82,7 +85,6 @@ public class Logger {
             File file = new File(getFullPath(path));
 
             if (!file.exists()) {
-                System.out.println("wwwww");
                 file.createNewFile();
             }
             out = new PrintWriter(new FileOutputStream(file, true));

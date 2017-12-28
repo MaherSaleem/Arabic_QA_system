@@ -6,7 +6,9 @@ import com.AQAS.Document_ranking.HelpersDR;
 import com.AQAS.answer_extraction.ConfigAE;
 import com.AQAS.keyphrase_extraction.ConfigKE;
 import com.AQAS.keyphrase_extraction.HelpersKE;
+import com.AQAS.main.ConfigM;
 import com.AQAS.main.HelpersM;
+import com.AQAS.main.Logger;
 import com.AQAS.question_type.ConfigQT;
 import com.AQAS.synonyms.FindSynonyms;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -35,13 +37,13 @@ public class Form {
 
 
     private static Form singletonForm;
-    public static Form getInstance(){
-        if(singletonForm == null){
+
+    public static Form getInstance() {
+        if (singletonForm == null) {
             singletonForm = new Form();
         }
         return singletonForm;
     }
-
 
 
     public Form() {
@@ -116,12 +118,14 @@ public class Form {
 
         this.keyPhrases = queryKeyPhrases;
     }
+
     public String[] getKeyPhrases() {
         if (this.keyPhrases == null) {
             this.setKeyPhrases();
         }
         return this.keyPhrases;
     }
+
     public ArrayList<Answer> getAnswers() {
         return answers;
     }
@@ -355,7 +359,8 @@ public class Form {
             case ConfigQT.QT_LIST:
                 for (int i = 0; i < ConfigAE.topN.LIST; i++) {
                     try {
-                        this.answers.add(new Answer(this.topSegmentsByRank.get(i).getText()));
+                        Segment segment = this.topSegmentsByRank.get(i);
+                        this.answers.add(new Answer(segment.getText(), segment.getRank()));
                     } catch (Exception e) {
                         break;
                     }
@@ -395,15 +400,23 @@ public class Form {
             case ConfigQT.QT_PARAGRAPH:
                 for (int i = 0; i < ConfigAE.topN.DEFINITION; i++) {
                     try {
-                        this.answers.add(new Answer(this.topSegmentsByOrder.get(i).getText()));
+                        Segment segment = this.topSegmentsByOrder.get(i);
+                        this.answers.add(new Answer(segment.getText(), segment.getRank()));
                     } catch (Exception e) {
                         break;
                     }
                 }
                 break;
         }
+        if (ConfigM.VERBOSE_LOG) {
+            for (Answer answer : this.answers) {
+                answer.log("answers");
+            }
+        }
+        if (ConfigM.VERBOS) {
+            this.printAnswers();
+        }
 
-        this.printAnswers();
     }
 
     public void printAnswers() {

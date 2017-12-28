@@ -1,8 +1,10 @@
 package com.AQAS.answer_extraction;
 
 
+import com.AQAS.Database.Answer;
 import com.AQAS.Database.Form;
 import com.AQAS.Database.Segment;
+import com.AQAS.main.Logger;
 import com.AQAS.question_type.ConfigQT;
 
 import java.util.ArrayList;
@@ -16,6 +18,8 @@ public class Driver {
         form.question_type = ConfigQT.QT_LIST;
         form.topSegmentsByRank = getSegments();
         form.extractAnswer();
+
+
     }
 
     public static ArrayList<Segment> getSegments() {
