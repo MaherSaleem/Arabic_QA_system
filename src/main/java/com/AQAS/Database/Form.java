@@ -37,8 +37,9 @@ public class Form {
 
 
     private static Form singletonForm;
-    public static Form getInstance(){
-        if(singletonForm == null){
+
+    public static Form getInstance() {
+        if (singletonForm == null) {
             singletonForm = new Form();
         }
         return singletonForm;
@@ -128,6 +129,7 @@ public class Form {
         }
         return this.keyPhrases;
     }
+
     public ArrayList<Answer> getAnswers() {
         return answers;
     }
@@ -361,7 +363,8 @@ public class Form {
             case ConfigQT.QT_LIST:
                 for (int i = 0; i < ConfigAE.topN.LIST; i++) {
                     try {
-                        this.answers.add(new Answer(this.topSegmentsByRank.get(i).getText()));
+                        Segment segment = this.topSegmentsByRank.get(i);
+                        this.answers.add(new Answer(segment.getText(), segment.getRank()));
                     } catch (Exception e) {
                         break;
                     }
@@ -401,15 +404,23 @@ public class Form {
             case ConfigQT.QT_PARAGRAPH:
                 for (int i = 0; i < ConfigAE.topN.DEFINITION; i++) {
                     try {
-                        this.answers.add(new Answer(this.topSegmentsByOrder.get(i).getText()));
+                        Segment segment = this.topSegmentsByOrder.get(i);
+                        this.answers.add(new Answer(segment.getText(), segment.getRank()));
                     } catch (Exception e) {
                         break;
                     }
                 }
                 break;
         }
+        if (ConfigM.VERBOSE_LOG) {
+            for (Answer answer : this.answers) {
+                answer.log("answers");
+            }
+        }
+        if (ConfigM.VERBOS) {
+            this.printAnswers();
+        }
 
-        this.printAnswers();
     }
 
     public void printAnswers() {

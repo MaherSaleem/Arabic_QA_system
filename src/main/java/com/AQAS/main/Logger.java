@@ -12,12 +12,15 @@ public class Logger {
     private static Logger ourInstance = null;
 
     public static Logger getInstance() {
+        if(ourInstance == null){
+            ourInstance = new Logger("tmp");
+        }
         return ourInstance;
     }
 
-    private Logger() {
-        ourInstance = new Logger();
-    }
+//    private Logger() {
+//        ourInstance = new Logger();
+//    }
 
     public Logger(String folderName) {
         this.folderName = "Logs/" + folderName;
