@@ -1,5 +1,7 @@
 package com.AQAS.document_retrieval;
 
+import com.AQAS.main.ConfigM;
+import com.AQAS.main.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -7,6 +9,7 @@ import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -67,13 +70,18 @@ public class Website {
     /*
         generic function to get documents links
      */
-    public Website_Document extractDocumentsLinksForAllPages(HashMap<String, Object> searchAttr) throws UnsupportedEncodingException, ParseException {
+    public Website_Document extractDocumentsLinksForAllPages(HashMap<String, Object> searchAttr) throws IOException, ParseException {
         ArrayList<String> allLinks = new ArrayList<String>();
 
         int startPage = this.searchPageOffset;
         int endPage = (Integer) searchAttr.get("searchNumOfPages") + this.searchPageOffset;
         for (int i = startPage; i < endPage; i++) {
-            System.out.println("Link Requested->" + this.generateSearchLink((String) searchAttr.get("searchQuery"), i));
+            if(ConfigM.VERBOSE_LOG){
+                Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/search_links", this.generateSearchLink((String) searchAttr.get("searchQuery"), i));
+            }
+            if(ConfigM.VERBOS){
+                System.out.println("Link Requested->" + this.generateSearchLink((String) searchAttr.get("searchQuery"), i));
+            }
             String generatedSearchURL = this.generateSearchLink((String) searchAttr.get("searchQuery"), i);
             allLinks.addAll(_extractDocumentsLinksForOnePage(generatedSearchURL));
         }

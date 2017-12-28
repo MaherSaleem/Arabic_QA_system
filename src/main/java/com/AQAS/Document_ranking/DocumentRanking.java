@@ -2,6 +2,7 @@ package com.AQAS.Document_ranking;
 
 import com.AQAS.Database.Form;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import javafx.util.Pair;
 
 public class DocumentRanking {
 
-    public static double getDocumentRank(String document, String query) {
+    public static double getDocumentRank(String document, String query) throws IOException {
 
 
 

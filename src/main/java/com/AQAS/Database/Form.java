@@ -6,7 +6,9 @@ import com.AQAS.Document_ranking.HelpersDR;
 import com.AQAS.answer_extraction.ConfigAE;
 import com.AQAS.keyphrase_extraction.ConfigKE;
 import com.AQAS.keyphrase_extraction.HelpersKE;
+import com.AQAS.main.ConfigM;
 import com.AQAS.main.HelpersM;
+import com.AQAS.main.Logger;
 import com.AQAS.question_type.ConfigQT;
 import com.AQAS.synonyms.FindSynonyms;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -95,28 +97,32 @@ public class Form {
         this.keyPhrases = keyPhrases;
     }
 
-    public void setKeyPhrases() {
+    public void setKeyPhrases() throws IOException {
         String[] queryKeyPhrases = HelpersKE.getKeyPhrases(this.normalizedText);
 
-        if (ConfigKE.VERBOS) {
-            System.out.println("Keyphrases List is :");
-            System.out.println(Arrays.toString(queryKeyPhrases));
+        if (ConfigM.VERBOSE_LOG){
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases", Arrays.toString(queryKeyPhrases));
+        }
+        if (ConfigM.VERBOS) {
+            System.out.println("Keyphrases List is :" + Arrays.toString(queryKeyPhrases));
         }
         ArrayList<String> queryKeyPhraseArrayList = new ArrayList<String>(Arrays.asList(queryKeyPhrases));
         for (String queryKeyPhrase : queryKeyPhrases) {
             String[] keyPhraseSynonyms = FindSynonyms.getWordSynonyms(queryKeyPhrase);
-            if (ConfigKE.VERBOS) {
-                System.out.println("Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: ");
-                System.out.println(Arrays.asList(keyPhraseSynonyms));
+            if (ConfigM.VERBOS) {
+                System.out.println("Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
             }
-            System.out.println("all keyphrases and synonyms");
+            if (ConfigM.VERBOSE_LOG){
+                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/synonyms","Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
+
+            }
             queryKeyPhraseArrayList.addAll(Arrays.asList(keyPhraseSynonyms));
         }
         queryKeyPhrases = queryKeyPhraseArrayList.toArray(new String[queryKeyPhraseArrayList.size()]);
 
         this.keyPhrases = queryKeyPhrases;
     }
-    public String[] getKeyPhrases() {
+    public String[] getKeyPhrases() throws IOException {
         if (this.keyPhrases == null) {
             this.setKeyPhrases();
         }
@@ -270,7 +276,7 @@ public class Form {
    *
    * this will generate the segments for each document in a form
     */
-    public void generateFormDocumentsSegments() {
+    public void generateFormDocumentsSegments() throws IOException {
 
         ArrayList<Segment> tempTopSegmentsByOrder = new ArrayList<>();
         String[] questionKeyPhrases = this.getKeyPhrases();
@@ -414,7 +420,7 @@ public class Form {
         this.documents = documents;
     }
 
-    public void calculateDocumentsRanks() {
+    public void calculateDocumentsRanks() throws IOException {
         for (Document document : this.documents) {
             double contentRank = DocumentRanking.getDocumentRank(document.text, this.normalizedText);
             document.setContentRank(contentRank);

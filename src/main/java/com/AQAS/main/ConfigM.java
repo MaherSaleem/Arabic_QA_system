@@ -15,7 +15,7 @@ public final class ConfigM {
 
     }
 
-    public static final boolean VERBOS = true;
+    public static final boolean VERBOS = false;
     public static final boolean VERBOSE_LOG = true;
 
     public static final boolean BUILD_DB = false;

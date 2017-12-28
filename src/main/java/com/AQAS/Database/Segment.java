@@ -5,10 +5,7 @@ import com.AQAS.main.HelpersM;
 import com.AQAS.passages_segmentation.ConfigPS;
 import com.AQAS.question_type.ConfigQT;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 
 
@@ -64,7 +61,7 @@ public class Segment  implements Comparable<Segment>{
                 '}';
     }
 
-    public void calculateRank(Form form, Document document) {
+    public void calculateRank(Form form, Document document) throws IOException {
 
         int questionType = form.question_type;
         ArrayList<Integer> segmentTypes = this.findSegmentTypes();
@@ -106,7 +103,7 @@ public class Segment  implements Comparable<Segment>{
         this.setRank(rank);
     }
 
-    public double findKeyPhrasesScore(String query) {
+    public double findKeyPhrasesScore(String query) throws IOException {
 
         return DocumentRanking.getDocumentRank(this.text, query);
     }

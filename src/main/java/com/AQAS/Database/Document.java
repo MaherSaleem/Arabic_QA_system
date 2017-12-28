@@ -255,7 +255,7 @@ public class Document implements Comparable<Document> {
     }
 
 
-    public void calculateSegmentsRanks(Form form) {
+    public void calculateSegmentsRanks(Form form) throws IOException {
 
         for (Segment segment:this.segments) {
             segment.calculateRank(form, this);

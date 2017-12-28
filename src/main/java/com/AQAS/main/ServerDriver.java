@@ -29,7 +29,6 @@ public class ServerDriver {
         String fileName = args[1];
         BufferedWriter outJsonFile = null;
         Logger logger = new Logger(fileName);
-        logger.log(ConfigM.LogFolders.PREPROCESSING+"/file.log", "تجربة مسج جديدة");
 
         //reading query
         File fileDir = new File(fileName);
@@ -38,7 +37,6 @@ public class ServerDriver {
                         new FileInputStream(fileDir), StandardCharsets.UTF_8));
         questionQuery = in.readLine();
         in.close();
-
 
 
         //our system code
@@ -52,7 +50,7 @@ public class ServerDriver {
             ArrayList<Document> retrievedDocuments = DocumentRetrieval.getDocumentsByQuery(normalizedQuery);
             form.setNormalizedText(normalizedQuery);
             form.setDocuments(retrievedDocuments);
-        }else{
+        } else {
             form = HelpersDB.getFormById(ConfigM.questionId);
             HashMap<String, String> out = QuestionPreprocessing.preProcessInput(form.getText());
             String normalizedQuery = out.get(ConfigP.Keys.NormalizedText); //TODO check to user normalized_stemmed or only normalized
@@ -60,40 +58,55 @@ public class ServerDriver {
             form.getDocuments();
         }
 
-        System.out.println("***1");
+        if (ConfigM.VERBOS) {
+            System.out.println("***1");
+        }
 
         form.calculateDocumentsRanks();
 //        Form form = retrieveDocuments(ConfigM.query);//
-        System.out.println("***2");
+
+        if (ConfigM.VERBOS) {
+            System.out.println("***2");
+        }
 
         //TODO use the saved model of machine learning
         ArrayList<Integer> result = getQuestionTypeUsingSVM(new ArrayList<>(Arrays.asList(form.getNormalizedText())));
-        System.out.println("***3");
+
+        if (ConfigM.VERBOS) {
+            System.out.println("***3");
+        }
         int questionType = result.size() > 0 ? result.get(0) : -1;
         form.setQuestion_type(questionType);
-        System.out.println(form.question_type);
 
 
 //        System.out.println("Before sorting Documents: " + form);
-
-        System.out.println("***4");
+        if (ConfigM.VERBOS) {
+            System.out.println("***4");
+        }
         Collections.sort(form.documents);// uses CompareTo in order to sort the document according to their contentRank
 
         System.out.println("After sorting Documents: " + form);
 
-        System.out.println("***5");
+        if (ConfigM.VERBOS) {
+            System.out.println("***5");
+        }
         form.removeIrrelevantDocuments();
 
-        System.out.println("***6");
+        if (ConfigM.VERBOS) {
+            System.out.println("***6");
+        }
         form.generateFormDocumentsSegments();
-        System.out.println("***7");
+        if (ConfigM.VERBOS) {
+            System.out.println("***7");
+        }
         form.extractAnswer();
 //        System.out.println("After Remove irrelevant: " + form);
         closeWebDriver();
-        System.out.println("***8");
+        if (ConfigM.VERBOS) {
+            System.out.println("***8");
+        }
 
         //end of our  system code
-
 
 
         try {

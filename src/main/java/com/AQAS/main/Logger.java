@@ -78,11 +78,9 @@ public class Logger {
     public void log(String path, String message) throws IOException {
         PrintWriter out = null;
         try {
-            System.out.println(getFullPath(path));
             File file = new File(getFullPath(path));
 
             if (!file.exists()) {
-                System.out.println("wwwww");
                 file.createNewFile();
             }
             out = new PrintWriter(new FileOutputStream(file, true));

@@ -3,6 +3,7 @@ package com.AQAS.document_retrieval;
 import com.AQAS.Database.Document;
 import com.AQAS.keyphrase_extraction.HelpersKE;
 import com.AQAS.main.ConfigM;
+import com.AQAS.main.Logger;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -27,7 +28,7 @@ public class DocumentRetrieval {
         for (Website website : ConfigD.webSites) {
             try {
                 DocumentSLinksWithContentSelector.add(website.extractDocumentsLinksForAllPages(searchAttr));
-            } catch (UnsupportedEncodingException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -86,7 +87,16 @@ public class DocumentRetrieval {
         //Specify the number of search pages result to be used.
         ArrayList<Website_Document> website_documents = DocumentRetrieval.getLinksOfAllWebsitesByQuery(preprocessed_query_string, ConfigM.searchNumOfPages);
         //printing the links
-        if (ConfigD.VERBOS) {
+        if (ConfigM.VERBOSE_LOG) {
+            for (Website_Document website_document : website_documents) {
+                for (String url : website_document.DocumentLinks) {
+                    Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/all_documents_links", url);
+                }
+                Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/all_documents_links", "===================================================");
+
+            }
+        }
+        if (ConfigM.VERBOS) {
             System.out.println("All Links:");
             for (Website_Document website_document : website_documents) {
                 for (String url : website_document.DocumentLinks) {

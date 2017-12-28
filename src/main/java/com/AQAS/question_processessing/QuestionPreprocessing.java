@@ -2,6 +2,8 @@ package com.AQAS.question_processessing;
 
 import java.io.IOException;
 
+import com.AQAS.main.ConfigM;
+import com.AQAS.main.Logger;
 import com.AQAS.question_processessing.utilities.AraNormalizer;
 import com.AQAS.question_processessing.utilities.DiacriticsRemover;
 import com.AQAS.question_processessing.utilities.LightStemmer8;
@@ -47,6 +49,14 @@ public class QuestionPreprocessing {
 
         results.put(ConfigP.Keys.NormalizedText , normalizedText);
         results.put(ConfigP.Keys.StemmedText , normlized_Stemmed_Query);
+        if (ConfigM.VERBOSE_LOG) {
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/normalized_query", normalizedText);
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/stemmed_query", normlized_Stemmed_Query);
+        }
+        if (ConfigM.VERBOS) {
+            System.out.println("Normalized Query:" + normalizedText);
+            System.out.println("stemmed Query:" + normlized_Stemmed_Query);
+        }
         return results;
     }
 }
