@@ -139,8 +139,6 @@ public class Segment  implements Comparable<Segment>{
         int numberThenDotCount = HelpersM.regexCount("\\d+\\s*\\.", this.text);
         int columnThenLineCount = HelpersM.regexCount(":\\s*\\n", this.text);
 
-        System.out.println("num: " + numberThenDotCount);
-        System.out.println(":: " + columnThenLineCount);
         return numberThenDotCount > 2 || this.containsShortSentences() || columnThenLineCount >= 1;
 
     }

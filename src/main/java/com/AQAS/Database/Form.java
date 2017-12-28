@@ -102,7 +102,7 @@ public class Form {
         String[] queryKeyPhrases = HelpersKE.getKeyPhrases(this.normalizedText);
 
         if (ConfigM.VERBOSE_LOG){
-            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases", Arrays.toString(queryKeyPhrases));
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases.log", Arrays.toString(queryKeyPhrases));
         }
         if (ConfigM.VERBOS) {
             System.out.println("Keyphrases List is :" + Arrays.toString(queryKeyPhrases));
@@ -114,7 +114,7 @@ public class Form {
                 System.out.println("Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
             }
             if (ConfigM.VERBOSE_LOG){
-                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/synonyms","Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
+                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/synonyms.log","Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
 
             }
             queryKeyPhraseArrayList.addAll(Arrays.asList(keyPhraseSynonyms));

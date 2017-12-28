@@ -191,9 +191,7 @@ public class Document implements Comparable<Document> {
         for (String sentence : documentSentences) {
             System.out.println(sentence);
             System.out.println("=============================================");
-
         }
-        System.out.println("started dividing.");
         int state = ConfigPS.STATE_END;
         int sentencesSize = documentSentences.length;
         int startIndex = 0;

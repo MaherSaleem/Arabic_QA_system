@@ -77,7 +77,7 @@ public class Website {
         int endPage = (Integer) searchAttr.get("searchNumOfPages") + this.searchPageOffset;
         for (int i = startPage; i < endPage; i++) {
             if(ConfigM.VERBOSE_LOG){
-                Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/search_links", this.generateSearchLink((String) searchAttr.get("searchQuery"), i));
+                Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/search_links.log", this.generateSearchLink((String) searchAttr.get("searchQuery"), i));
             }
             if(ConfigM.VERBOS){
                 System.out.println("Link Requested->" + this.generateSearchLink((String) searchAttr.get("searchQuery"), i));

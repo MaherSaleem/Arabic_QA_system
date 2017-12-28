@@ -47,9 +47,6 @@ public final class HelpersDR {
         // Pre-compute the profile of strings
         Map<String, Integer> profile1 = cosine.getProfileByWordSplitting(s1);
         Map<String, Integer> profile2 = cosine.getProfileByWordSplitting(s2);
-        System.out.println(profile1);
-        System.out.println(profile2);
-
 
         double result = cosine.similarity(profile1, profile2);
         System.out.println("cosine similarity is : " + result);

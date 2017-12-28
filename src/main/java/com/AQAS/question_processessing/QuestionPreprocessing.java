@@ -50,8 +50,8 @@ public class QuestionPreprocessing {
         results.put(ConfigP.Keys.NormalizedText , normalizedText);
         results.put(ConfigP.Keys.StemmedText , normlized_Stemmed_Query);
         if (ConfigM.VERBOSE_LOG) {
-            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/normalized_query", normalizedText);
-            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/stemmed_query", normlized_Stemmed_Query);
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/normalized_query.log", normalizedText);
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/stemmed_query.log", normlized_Stemmed_Query);
         }
         if (ConfigM.VERBOS) {
             System.out.println("Normalized Query:" + normalizedText);

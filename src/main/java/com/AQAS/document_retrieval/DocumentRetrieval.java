@@ -90,9 +90,9 @@ public class DocumentRetrieval {
         if (ConfigM.VERBOSE_LOG) {
             for (Website_Document website_document : website_documents) {
                 for (String url : website_document.DocumentLinks) {
-                    Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/all_documents_links", url);
+                    Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/all_documents_links.log", url);
                 }
-                Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/all_documents_links", "===================================================");
+                Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/all_documents_links.log", "===================================================");
 
             }
         }
