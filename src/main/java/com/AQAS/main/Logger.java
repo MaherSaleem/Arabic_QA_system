@@ -12,7 +12,7 @@ public class Logger {
     private static Logger ourInstance = null;
 
     public static Logger getInstance() {
-        if(ourInstance == null){
+        if (ourInstance == null) {
             ourInstance = new Logger("tmp");
         }
         return ourInstance;
@@ -26,6 +26,23 @@ public class Logger {
         this.folderName = "Logs/" + folderName;
         ourInstance = this;
         initializeLogger();
+    }
+
+    public static boolean deleteDirectory(File dir) {
+
+
+        if (dir.isDirectory()) {
+            File[] children = dir.listFiles();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDirectory(children[i]);
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+
+        System.out.println(dir + " deleted");
+        return dir.delete();
     }
 
     public void createDirectory(String name) {
@@ -51,6 +68,7 @@ public class Logger {
     private void initializeLogger() {
 
         createDirectory("Logs");
+        deleteDirectory(new File(this.folderName));
         createDirectory(this.folderName);
 
         String[] folders = new String[]{
