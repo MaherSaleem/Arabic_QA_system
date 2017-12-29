@@ -72,7 +72,7 @@ public class NormalArabicDataset {
 
 
                     ))
-                    , ConfigQT.QT_PARAGRAPH
+                    , ConfigQT.QT_PARAGRAPH//TODO check this
             ),
             new Question("علاج السكري",
                     new ArrayList<Form>(Arrays.asList(

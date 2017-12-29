@@ -32,7 +32,6 @@ public class TrainedTokenizer {
         String tokens[] = null;
 
         InputStream modelIn = HelpersM.getInputStreamFromResrcFile("arabic-token.bin");
-//        InputStream modelIn = new FileInputStream("src\\main\\java\\com\\AQAS\\question_processessing\\arabic-token.bin");
         try {
             TokenizerModel model = new TokenizerModel(modelIn);
             TokenizerME tokenizer = new TokenizerME(model);

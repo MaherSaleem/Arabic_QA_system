@@ -4,6 +4,8 @@ import com.AQAS.Database.Document;
 import com.AQAS.keyphrase_extraction.HelpersKE;
 import com.AQAS.main.ConfigM;
 import com.AQAS.main.Logger;
+import com.AQAS.question_processessing.ConfigP;
+import com.AQAS.question_processessing.QuestionPreprocessing;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -41,7 +43,7 @@ public class DocumentRetrieval {
     /**
      * @param URL
      */
-    public static String retrieveDocumentText(String URL , String contentSelector) {
+    public static String retrieveDocumentText(String URL , String contentSelector) throws IOException {
         try {
             driver.get(URL);
         }catch (Exception e){
@@ -77,6 +79,7 @@ public class DocumentRetrieval {
 
 
         String documentText = we.getText();
+        documentText = QuestionPreprocessing.preProcessDocument(documentText).get(ConfigP.Keys.NormalizedText_WithStoppingWords_WithAlT3reef_WithPunctuation);
         return documentText;
 
     }

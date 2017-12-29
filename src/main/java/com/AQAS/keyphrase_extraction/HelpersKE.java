@@ -22,7 +22,6 @@ public class HelpersKE {
 
     }
 
-    //TODO: implement this
     private static String[] kpAlternative(String query) {
 
         TrainedTokenizer tok = new TrainedTokenizer();

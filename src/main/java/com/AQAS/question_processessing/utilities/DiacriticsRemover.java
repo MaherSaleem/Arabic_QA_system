@@ -19,14 +19,22 @@ package com.AQAS.question_processessing.utilities;
 import java.util.ArrayList;
 
 public class DiacriticsRemover {
-	
-    // remove all diacritics from text	
-    public String removeDiacritics(String currentText)
+
+	public String removeDiacritics(String currentText){
+		return removeDiacritics(currentText, true);
+	}
+	// remove all diacritics from text
+    public String removeDiacritics(String currentText, boolean removeWhiteSpacesFlag)
        {
 		ArrayList<String> tokens=new ArrayList<String>();
     	StringBuffer modifiedWord=new StringBuffer("");
-	    ArrayList<String> modifiedText=removeExtraSpaces(currentText);
-	    
+		   ArrayList<String> modifiedText = null;
+		   if (removeWhiteSpacesFlag) {
+			   modifiedText = removeExtraSpaces(currentText);
+		   } else {
+			   modifiedText = new ArrayList<>();
+			   modifiedText.add(currentText);
+		   }
 	    // for each token in the text
 	    for (int i=0;i<modifiedText.size();i++)
 	     {

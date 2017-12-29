@@ -47,6 +47,6 @@ public final class ConfigQT {
     //config to choose which dataset to use for training
     public static  final ArrayList<Question> trainingQuestions = ConfigDB.normalArabicDataSet;
 
-    public static  final String textInputPreprcessedKey = ConfigP.Keys.NormalizedText;
+    public static  final String textInputPreprcessedKey = ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef;
 
 }

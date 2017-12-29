@@ -29,6 +29,7 @@ import com.AQAS.main.HelpersM;
 import com.AQAS.question_processessing.utilities.AraNormalizer;
 import com.AQAS.question_processessing.utilities.DiacriticsRemover;
 import com.AQAS.question_processessing.utilities.PunctuationsRemover;
+import com.AQAS.question_processessing.utilities.TrainedTokenizer;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -94,8 +95,10 @@ public class ArabicStemmer
 //        this.outputFilePanelStemButtonActionPerformed();
     }
 
-    public String removeStopWords(String[] tokens)
-    { String removedStop = "";
+    public String removeStopWords(String string) throws IOException {
+        TrainedTokenizer trainedTokenizer = new TrainedTokenizer();
+        String[] tokens = trainedTokenizer.tokenize(string);
+        String removedStop = "";
 
         for(int i= 0 ; i<tokens.length ; i++)
         {

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class HelpersQT {
 
-    //TODO: make it return list of questions with their type
     public static ArrayList<Integer> getQuestionTypeUsingSVM(ArrayList<String> testingQuestions) throws IOException {
         Instances ngrammedVectors = null;
         ArrayList<Integer> result = new ArrayList<Integer>();

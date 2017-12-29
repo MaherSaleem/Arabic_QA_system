@@ -20,8 +20,8 @@ public class Driver {
     public static void main(String[] args) throws IOException {
 
         String query = "اعراض مرض السكري";
-        query = QuestionPreprocessing.preProcessInput(query).get(ConfigP.Keys.NormalizedText);
-        String document = QuestionPreprocessing.preProcessInput(ConfigDR.testingDoc).get(ConfigP.Keys.NormalizedText);
+        query = QuestionPreprocessing.preProcessInput(query).get(ConfigP.Keys.NormalizedText_WithStoppingWords_WithAlT3reef);
+        String document = QuestionPreprocessing.preProcessDocument(ConfigDR.testingDoc).get(ConfigP.Keys.NormalizedText_WithStoppingWords_WithAlT3reef_WithPunctuation);
 
 //        String [] keyPhrases = HelpersKE.getKeyPhrases(query);
 //        for(int i = 0; i< keyPhrases.length; i++){

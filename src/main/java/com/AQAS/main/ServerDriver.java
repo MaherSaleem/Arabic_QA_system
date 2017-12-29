@@ -23,8 +23,6 @@ import static com.AQAS.question_type.HelpersQT.getQuestionTypeUsingSVM;
 
 public class ServerDriver {
     public static void main(String[] args) throws IOException {
-
-
         String questionQuery = args[0];
         String fileName = args[1];
         BufferedWriter outJsonFile = null;
@@ -47,14 +45,16 @@ public class ServerDriver {
             openWebDriver();
             form.setText(questionQuery);
             HashMap<String, String> out = QuestionPreprocessing.preProcessInput(form.getText());
-            String normalizedQuery = out.get(ConfigP.Keys.NormalizedText); //TODO check to user normalized_stemmed or only normalized
+            form.setPreprocessed_query(out);
+            String normalizedQuery = out.get(ConfigP.Keys.NormalizedText_WithStoppingWords_WithAlT3reef);
             ArrayList<Document> retrievedDocuments = DocumentRetrieval.getDocumentsByQuery(normalizedQuery);
-            form.setNormalizedText(normalizedQuery);
+            form.setNormalizedText(out.get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef));
             form.setDocuments(retrievedDocuments);
         } else {
             form = HelpersDB.getFormById(ConfigM.questionId);
             HashMap<String, String> out = QuestionPreprocessing.preProcessInput(form.getText());
-            String normalizedQuery = out.get(ConfigP.Keys.NormalizedText); //TODO check to user normalized_stemmed or only normalized
+            form.setPreprocessed_query(out);
+            String normalizedQuery = out.get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef);
             form.setNormalizedText(normalizedQuery);
             form.getDocuments();
         }
@@ -70,7 +70,6 @@ public class ServerDriver {
             System.out.println("***2");
         }
 
-        //TODO use the saved model of machine learning
         ArrayList<Integer> result = getQuestionTypeUsingSVM(new ArrayList<>(Arrays.asList(form.getNormalizedText())));
 
         if (ConfigM.VERBOS) {

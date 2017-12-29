@@ -4,11 +4,11 @@ import com.AQAS.Database.Form;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import com.AQAS.POS.*;
-import com.AQAS.synonyms.FindSynonyms;
+import com.AQAS.main.ConfigM;
+import com.AQAS.main.HelpersM;
 import javafx.util.Pair;
 
 public class DocumentRanking {
@@ -17,25 +17,28 @@ public class DocumentRanking {
 
 
 
-        String[] queryKeyPhrases = Form.getInstance().getKeyPhrases();
+        String[] queryKeyPhrasesWithSynonyms = Form.getInstance().getKeyPhrases();
 
-        HashMap<String, Double> keyPhrasesFrequencies = HelpersDR.getWordsFreqInDoc(queryKeyPhrases, document);
+        HashMap<String, Double> keyPhrasesFrequencies = HelpersDR.getWordsFreqInDoc(queryKeyPhrasesWithSynonyms, document);
         double cosineSimilarity = HelpersDR.cosineSimilarity(query, document);
 
 
 
         double keyPhrasesScore = 0;
-        for (String keyPhrase : queryKeyPhrases) {
+        for (String keyPhrase : queryKeyPhrasesWithSynonyms) {
 
             double keyPhraseScore = 0;
             double keyPhraseFreq = keyPhrasesFrequencies.get(keyPhrase);
-            int keyPhraseLength = HelpersDR.getSentenceWordsCount(keyPhrase);
+            int keyPhraseLength = HelpersM.getSentenceWordsCount(keyPhrase);
             double properNameScore = getProperNameScore(keyPhrase);
-            System.out.println("KEYPHRASE: "+keyPhrase);
-            System.out.println("keyphraseFreq: "+keyPhraseFreq);
-            System.out.println("keyPhraseLength: "+keyPhraseLength);
-            System.out.println("properNameScore: "+properNameScore);
-            keyPhraseScore = keyPhraseFreq  * Math.sqrt(keyPhraseLength) * properNameScore;
+            if (ConfigM.VERBOS){
+                System.out.println("KEYPHRASE: "+keyPhrase);
+                System.out.println("keyphraseFreq: "+keyPhraseFreq);
+                System.out.println("keyPhraseLength: "+keyPhraseLength);
+                System.out.println("properNameScore: "+properNameScore);
+
+            }
+            keyPhraseScore = keyPhraseFreq * Math.sqrt(keyPhraseLength) * properNameScore;
             keyPhrasesScore += keyPhraseScore;
         }
 

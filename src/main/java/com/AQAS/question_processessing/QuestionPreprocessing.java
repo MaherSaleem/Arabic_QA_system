@@ -14,49 +14,87 @@ import java.util.HashMap;
 
 public class QuestionPreprocessing {
 
-    public static HashMap<String ,String> preProcessInput(String query)  throws IOException{
+    public static HashMap<String, String> preProcessInput(String query) throws IOException {
 
 
-        HashMap <String, String> results = new HashMap<String, String>();
+        HashMap<String, String> results = new HashMap<String, String>();
 
+
+        //Initializations
+        TrainedTokenizer trainedTokenizer = new TrainedTokenizer();
+        LightStemmer8 lightStemmer = new LightStemmer8();
+        ArabicStemmer stoppingWordsRemoval = new ArabicStemmer();
+
+        //normalization
         AraNormalizer arn = new AraNormalizer();
-        DiacriticsRemover diacriticsRemover = new DiacriticsRemover();
-        PunctuationsRemover punctuationsRemover = new PunctuationsRemover();
-        TrainedTokenizer tok=new TrainedTokenizer();
-        LightStemmer8 stemmer8 = new LightStemmer8();
         String normalizedText = arn.normalize(query);
+
+        //remove Diacritic (7arakat)
+        DiacriticsRemover diacriticsRemover = new DiacriticsRemover();
         normalizedText = diacriticsRemover.removeDiacritics(normalizedText);
+
+
+        //remove Punctuations and save normalized
+        PunctuationsRemover punctuationsRemover = new PunctuationsRemover();
         normalizedText = punctuationsRemover.removePunctuations(normalizedText);
 
-        //System.out.println("Normalized text: " + normalizedText);
 
-        ArabicStemmer arabicStemmer = new ArabicStemmer();
-        String[] tokens=tok.tokenize(normalizedText);
-        String removedStop = arabicStemmer.removeStopWords(tokens);
-        tokens=tok.tokenize(removedStop);
-        String normlized_Stemmed_Query="";
-        for (int i=0;i<tokens.length;i++)
-        {
-            String stem=stemmer8.findStem(tokens[i]);
-            normlized_Stemmed_Query=normlized_Stemmed_Query+stem+" ";
+        String normalizedText_WithoutStoppingWords = stoppingWordsRemoval.removeStopWords(normalizedText);
+
+        String normalized_WithoutStoppingWords_WithoutAlfT3reef = "";
+        //remove al alt3reef
+        String[] normalizedText_WithoutStoppingWords_Tokens = trainedTokenizer.tokenize(normalizedText_WithoutStoppingWords);
+        for (String token : normalizedText_WithoutStoppingWords_Tokens) {
+            normalized_WithoutStoppingWords_WithoutAlfT3reef += lightStemmer.removeAlfAlt3reef(token) + " ";
         }
 
 
-        normalizedText= removedStop;
-//        String normlized_Sttemed_Query = arabicStemmer.outputFilePanelStemButtonActionPerformed();
-//        System.out.println(arabicStemmer.stemmedTextLists.toString());
+        //find stemmed version for every word of normalizedText(after stopping words removed)
+        normalizedText_WithoutStoppingWords_Tokens = trainedTokenizer.tokenize(normalizedText_WithoutStoppingWords);
+        String normalized_WithoutStoppingWords_Stemmed = "";
+        for (String token : normalizedText_WithoutStoppingWords_Tokens) {
+            normalized_WithoutStoppingWords_Stemmed += lightStemmer.findStem(token) + " ";
+        }
 
+        results.put(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithALT3reef, normalizedText_WithoutStoppingWords);
+        results.put(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef, normalized_WithoutStoppingWords_WithoutAlfT3reef);//without Al alt3reef, without stopping words
 
-        results.put(ConfigP.Keys.NormalizedText , normalizedText);
-        results.put(ConfigP.Keys.StemmedText , normlized_Stemmed_Query);
+        results.put(ConfigP.Keys.NormalizedText_WithStoppingWords_WithAlT3reef, normalizedText);// with Al alt3reef,
+        results.put(ConfigP.Keys.StemmedText, normalized_WithoutStoppingWords_Stemmed);
+
+        /*
+        * Machine Learning Training:
+        * Search in websites
+        */
         if (ConfigM.VERBOSE_LOG) {
-            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/normalized_query.log", normalizedText);
-            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/stemmed_query.log", normlized_Stemmed_Query);
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/normalization_and stemming.log", "Normalized with stopping Words with AL:\n" + results.get(ConfigP.Keys.NormalizedText_WithStoppingWords_WithAlT3reef));
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/normalization_and stemming.log", "Normalized without stopping Words with AL:\n" + results.get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithALT3reef));
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/normalization_and stemming.log", "Normalized without stopping Words without AL:\n" + results.get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef));
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/normalization_and stemming.log", "stemmed without stopping Words:\n" + results.get(ConfigP.Keys.StemmedText));
         }
         if (ConfigM.VERBOS) {
-            System.out.println("Normalized Query:" + normalizedText);
-            System.out.println("stemmed Query:" + normlized_Stemmed_Query);
+            System.out.println("Normalized with stopping Words with AL:\n" + results.get(ConfigP.Keys.NormalizedText_WithStoppingWords_WithAlT3reef));
+            System.out.println("Normalized without stopping Words with AL:\n" + results.get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithALT3reef));
+            System.out.println("Normalized without stopping Words without AL:\n" + results.get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef));
+            System.out.println("stemmed without stopping Words:\n" + results.get(ConfigP.Keys.StemmedText));
         }
+        return results;
+    }
+
+    public static HashMap<String, String> preProcessDocument(String query) throws IOException {
+
+        HashMap<String, String> results = new HashMap<String, String>();
+
+
+        //normalization
+        AraNormalizer arn = new AraNormalizer();
+        String normalizedText = arn.normalize(query, false);
+
+        //remove Diacritic (7arakat)
+        DiacriticsRemover diacriticsRemover = new DiacriticsRemover();
+        normalizedText = diacriticsRemover.removeDiacritics(normalizedText, false);
+
+        results.put(ConfigP.Keys.NormalizedText_WithStoppingWords_WithAlT3reef_WithPunctuation, normalizedText);
         return results;
     }
 }

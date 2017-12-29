@@ -29,7 +29,7 @@ public class HelpersDB {
         for (Question question : ConfigDB.trainingQuestions) {
             int question_id = question.store();
             for (Form form : question.forms) {
-                form.text = QuestionPreprocessing.preProcessInput(form.text).get(ConfigP.Keys.NormalizedText);
+                form.text = QuestionPreprocessing.preProcessInput(form.text).get(ConfigP.Keys.NormalizedText_WithStoppingWords_WithAlT3reef);
 
                 form.question_id = question_id;
                 int form_id = form.store();

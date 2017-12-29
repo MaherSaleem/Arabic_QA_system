@@ -9,6 +9,7 @@ import com.AQAS.keyphrase_extraction.HelpersKE;
 import com.AQAS.main.ConfigM;
 import com.AQAS.main.HelpersM;
 import com.AQAS.main.Logger;
+import com.AQAS.question_processessing.ConfigP;
 import com.AQAS.question_type.ConfigQT;
 import com.AQAS.synonyms.FindSynonyms;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -35,9 +36,17 @@ public class Form {
     public ArrayList<Segment> topSegmentsByRank = new ArrayList<>();// top segments by rank
     public ArrayList<Segment> topSegmentsByOrder = new ArrayList<>();//top segments by order of document
     public ArrayList<Answer> answers = new ArrayList<Answer>();// the segments ordered by Rank
-
+    HashMap<String, String> preprocessed_query;
 
     private static Form singletonForm;
+
+    public HashMap<String, String> getPreprocessed_query() {
+        return preprocessed_query;
+    }
+
+    public void setPreprocessed_query(HashMap<String, String> preprocessed_query) {
+        this.preprocessed_query = preprocessed_query;
+    }
 
     public static Form getInstance() {
         if (singletonForm == null) {
@@ -100,28 +109,39 @@ public class Form {
 
     public void setKeyPhrases() throws IOException {
         String[] queryKeyPhrases = HelpersKE.getKeyPhrases(this.normalizedText);
-
+        String[] stemmedWords = this.getPreprocessed_query().get(ConfigP.Keys.StemmedText).split("\\s");
         if (ConfigM.VERBOSE_LOG) {
-            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases.log", Arrays.toString(queryKeyPhrases));
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases.log", "Keyphrases List" +  Arrays.toString(queryKeyPhrases) + "\n====================================");
         }
         if (ConfigM.VERBOS) {
             System.out.println("Keyphrases List is :" + Arrays.toString(queryKeyPhrases));
         }
-        ArrayList<String> queryKeyPhraseArrayList = new ArrayList<String>(Arrays.asList(queryKeyPhrases));
+        ArrayList<String> queryStemmedWordsWithKeyphrasesSynonyms = new ArrayList<String>();
+
+        //getting synonyms for key phrases
         for (String queryKeyPhrase : queryKeyPhrases) {
             String[] keyPhraseSynonyms = FindSynonyms.getWordSynonyms(queryKeyPhrase);
             if (ConfigM.VERBOS) {
                 System.out.println("Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
             }
             if (ConfigM.VERBOSE_LOG) {
-                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/synonyms.log", "Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
+                Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases.log", "Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
 
             }
-            queryKeyPhraseArrayList.addAll(Arrays.asList(keyPhraseSynonyms));
+            if (HelpersM.getSentenceWordsCount(queryKeyPhrase) > 1){
+                queryStemmedWordsWithKeyphrasesSynonyms.add(queryKeyPhrase);
+            }
+            queryStemmedWordsWithKeyphrasesSynonyms.addAll(Arrays.asList(keyPhraseSynonyms));
         }
-        queryKeyPhrases = queryKeyPhraseArrayList.toArray(new String[queryKeyPhraseArrayList.size()]);
-
-        this.keyPhrases = queryKeyPhrases;
+        queryStemmedWordsWithKeyphrasesSynonyms.addAll((Arrays.asList(stemmedWords)));
+        queryKeyPhrases = HelpersM.removeStringDuplicates(queryStemmedWordsWithKeyphrasesSynonyms.toArray(new String[queryStemmedWordsWithKeyphrasesSynonyms.size()]));
+        if (ConfigM.VERBOSE_LOG) {
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases.log","==================================\nKey phrases with synonyms" + Arrays.toString(queryKeyPhrases));
+        }
+        if (ConfigM.VERBOS) {
+            System.out.println("==================================\nKey phrases with synonyms" + Arrays.toString(queryKeyPhrases));
+        }
+        this.setKeyPhrases(queryKeyPhrases);
     }
 
     public String[] getKeyPhrases() throws IOException {
@@ -250,7 +270,7 @@ public class Form {
                 return avg - standardDeviation;
             }
         }
-        return 1;//TODO
+        return 1;
     }
 
 

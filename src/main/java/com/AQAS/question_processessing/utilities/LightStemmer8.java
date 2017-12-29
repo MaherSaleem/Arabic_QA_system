@@ -19,88 +19,98 @@
 package com.AQAS.question_processessing.utilities;
 
 public class LightStemmer8 {
-	public String findStem(String token)
-	{
-		String stem="";
-		token=token.trim();
-		String[] txtToken=token.split("\\s");
-		if (txtToken.length > 1)
-		{
-			System.out.println("error: findStem function finds a stem for one token each time!");
+    public String findStem(String token) {
+        String stem = "";
+        token = token.trim();
+        String[] txtToken = token.split("\\s");
+        if (txtToken.length > 1) {
+            System.out.println("error: findStem function finds a stem for one token each time!");
             return stem;
-		}
-		else
-		{
-			if (token.length() >= 4 && token.charAt(0) == '\u0648')
-			{
-				token = token.substring(1);
-			}
-			if (token.length() >= 4 && token.charAt(0) == '\u0627' && token.charAt(1) == '\u0644')
-			{
-				token = token.substring(2);
-			}
-			
-	        if (token.length() >= 5 && 
-	           ((token.charAt(0) == '\u0628' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644')
-	             ||(token.charAt(0) == '\u0648' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644')
-			     ||(token.charAt(0) == '\u0643' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644')
-			     ||(token.charAt(0) == '\u0641' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644')))
-	         {
-		        token = token.substring(3);
-	         }
-	        
-	        if (token.length()>=4 && token.charAt(token.length()-2) == '\u0647' && token.charAt(token.length()-1) == '\u0627')
-	         {
-	        	token = token.substring(0,token.length()-2);
-	         }
-	        
-	        if (token.length()>=4 && token.charAt(token.length()-2) == '\u0627' && token.charAt(token.length()-1) == '\u0646')
-	         {
-	        	token = token.substring(0,token.length()-2);
-	         }
-	        
-	        if (token.length()>=4 && token.charAt(token.length()-2) == '\u0627' && token.charAt(token.length()-1) == '\u062a')
-	         {
-	        	token = token.substring(0,token.length()-2);
-	         }
-	        
-	        if (token.length()>=4 && token.charAt(token.length()-2) == '\u0648' && token.charAt(token.length()-1) == '\u0646')
-	         {
-	        	token = token.substring(0,token.length()-2);
-	         }
-	        
-	        if (token.length()>=4 && token.charAt(token.length()-2) == '\u064a' && token.charAt(token.length()-1) == '\u0646')
-	         {
-	        	token = token.substring(0,token.length()-2);
-	         }
-	        
-	        if (token.length()>=4 && token.charAt(token.length()-2) == '\u064a' && token.charAt(token.length()-1) == '\u0647')
-	         {
-	        	token = token.substring(0,token.length()-2);
-	         }
-	        
-	        if (token.length()>=4 && token.charAt(token.length()-2) == '\u064a' && token.charAt(token.length()-1) == '\u0629')
-	         {
-	        	token = token.substring(0,token.length()-2);
-	         }
-	        
-	        if (token.length()>=3 && token.charAt(token.length()-1) == '\u0647')
-	         {
-	        	token = token.substring(0,token.length()-1);
-	         }
-	        
-	        if (token.length()>=3 && token.charAt(token.length()-1) == '\u0629')
-	         {
-	        	token = token.substring(0,token.length()-1);
-	         }
-	        
-	        if (token.length()>=3 && token.charAt(token.length()-1) == '\u064a')
-	         {
-	        	token = token.substring(0,token.length()-1);
-	         }
-			
-	        stem=token;
-			return stem;
-		}
-	}
+        } else {
+            if (token.length() >= 4 && token.charAt(0) == '\u0648') {
+                token = token.substring(1);
+            }
+            if (token.length() >= 4 && token.charAt(0) == '\u0627' && token.charAt(1) == '\u0644') {
+                token = token.substring(2);
+            }
+
+            if (token.length() >= 5 &&
+                    ((token.charAt(0) == '\u0628' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644')
+                            || (token.charAt(0) == '\u0648' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644')
+                            || (token.charAt(0) == '\u0643' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644')
+                            || (token.charAt(0) == '\u0641' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644'))) {
+                token = token.substring(3);
+            }
+
+            if (token.length() >= 4 && token.charAt(token.length() - 2) == '\u0647' && token.charAt(token.length() - 1) == '\u0627') {
+                token = token.substring(0, token.length() - 2);
+            }
+
+            if (token.length() >= 4 && token.charAt(token.length() - 2) == '\u0627' && token.charAt(token.length() - 1) == '\u0646') {
+                token = token.substring(0, token.length() - 2);
+            }
+
+            if (token.length() >= 4 && token.charAt(token.length() - 2) == '\u0627' && token.charAt(token.length() - 1) == '\u062a') {
+                token = token.substring(0, token.length() - 2);
+            }
+
+            if (token.length() >= 4 && token.charAt(token.length() - 2) == '\u0648' && token.charAt(token.length() - 1) == '\u0646') {
+                token = token.substring(0, token.length() - 2);
+            }
+
+            if (token.length() >= 4 && token.charAt(token.length() - 2) == '\u064a' && token.charAt(token.length() - 1) == '\u0646') {
+                token = token.substring(0, token.length() - 2);
+            }
+
+            if (token.length() >= 4 && token.charAt(token.length() - 2) == '\u064a' && token.charAt(token.length() - 1) == '\u0647') {
+                token = token.substring(0, token.length() - 2);
+            }
+
+            if (token.length() >= 4 && token.charAt(token.length() - 2) == '\u064a' && token.charAt(token.length() - 1) == '\u0629') {
+                token = token.substring(0, token.length() - 2);
+            }
+
+            if (token.length() >= 3 && token.charAt(token.length() - 1) == '\u0647') {
+                token = token.substring(0, token.length() - 1);
+            }
+
+            if (token.length() >= 3 && token.charAt(token.length() - 1) == '\u0629') {
+                token = token.substring(0, token.length() - 1);
+            }
+//
+//            if (token.length() >= 3 && token.charAt(token.length() - 1) == '\u064a') {
+//                token = token.substring(0, token.length() - 1);
+//            }
+
+            stem = token;
+            return stem;
+        }
+    }
+
+    public String removeAlfAlt3reef(String token) {
+        String stem = "";
+        token = token.trim();
+        String[] txtToken = token.split("\\s");
+        if (txtToken.length > 1) {
+            System.out.println("error: findStem function finds a stem for one token each time!");
+            return stem;
+        } else {
+
+            if (token.length() >= 4 && token.charAt(0) == '\u0627' && token.charAt(1) == '\u0644') {
+                token = token.substring(2);
+            }
+
+            if (token.length() >= 5 &&
+                    ((token.charAt(0) == '\u0628' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644')
+                            || (token.charAt(0) == '\u0648' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644')
+                            || (token.charAt(0) == '\u0643' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644')
+                            || (token.charAt(0) == '\u0641' && token.charAt(1) == '\u0627' && token.charAt(2) == '\u0644'))) {
+                token = token.substring(3);
+            }
+
+            stem = token;
+            return stem;
+        }
+    }
+
 }

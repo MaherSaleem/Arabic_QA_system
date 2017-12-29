@@ -39,14 +39,14 @@ public class Driver {
             openWebDriver();
             form.setText(ConfigM.query);
             HashMap<String, String> out = QuestionPreprocessing.preProcessInput(form.getText());
-            String normalizedQuery = out.get(ConfigP.Keys.NormalizedText); //TODO check to user normalized_stemmed or only normalized
+            String normalizedQuery = out.get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef);
             ArrayList<Document> retrievedDocuments = DocumentRetrieval.getDocumentsByQuery(normalizedQuery);
             form.setNormalizedText(normalizedQuery);
             form.setDocuments(retrievedDocuments);
         }else{
             form = HelpersDB.getFormById(ConfigM.questionId);
             HashMap<String, String> out = QuestionPreprocessing.preProcessInput(form.getText());
-            String normalizedQuery = out.get(ConfigP.Keys.NormalizedText); //TODO check to user normalized_stemmed or only normalized
+            String normalizedQuery = out.get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef);
             form.setNormalizedText(normalizedQuery);
             form.getDocuments();
         }
@@ -57,7 +57,6 @@ public class Driver {
 //        Form form = retrieveDocuments(ConfigM.query);//
         System.out.println("***2");
 
-        //TODO use the saved model of machine learning
         ArrayList<Integer> result = getQuestionTypeUsingSVM(new ArrayList<>(Arrays.asList(form.getNormalizedText())));
         System.out.println("***3");
         int questionType = result.size() > 0 ? result.get(0) : -1;

@@ -28,7 +28,6 @@ public final class HelpersDR {
             while (matcher.find())
                 count++;
 
-            //TODO oktom comment sho 3mlna hoon
             wordFrequencies.put(word, count / Math.sqrt(documentKeyPhasesSize)); //Normalized freq
 //            int documentWordsCount = getSentenceWordsCount(document);
 //            wordFrequencies.put(word, count);
@@ -53,11 +52,6 @@ public final class HelpersDR {
         return result;
     }
 
-    public static int getSentenceWordsCount(String sentence) {
-        String trim = sentence.trim();
-        if (trim.isEmpty())
-            return 0;
-        return trim.split("\\s+").length; // separate string around spaces
-    }
+
 
 }

@@ -19,7 +19,7 @@ public class Driver {
         openWebDriver();
 
         HashMap<String, String> out = QuestionPreprocessing.preProcessInput(ConfigM.query);
-        String normalizedQuery = out.get(ConfigP.Keys.NormalizedText);
+        String normalizedQuery = out.get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef);
 
         ArrayList<Document> documents  = DocumentRetrieval.getDocumentsByQuery(normalizedQuery);
 

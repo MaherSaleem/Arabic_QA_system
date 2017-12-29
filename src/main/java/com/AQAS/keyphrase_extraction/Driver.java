@@ -16,7 +16,7 @@ public class Driver {
         String query = "ما هي أعراض مرض السكري و أسبابه و سبل الوقاية منه";
         String normalizedQuery = query;
         try{
-            normalizedQuery = QuestionPreprocessing.preProcessInput(query).get(ConfigP.Keys.NormalizedText);
+            normalizedQuery = QuestionPreprocessing.preProcessInput(query).get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("ffff");

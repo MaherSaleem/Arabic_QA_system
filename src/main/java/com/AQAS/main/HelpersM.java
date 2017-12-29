@@ -46,11 +46,16 @@ public class HelpersM {
         return classLoader.getResourceAsStream(fileName);
     }
 
-
+    public static int getSentenceWordsCount(String sentence) {
+        String trim = sentence.trim();
+        if (trim.isEmpty())
+            return 0;
+        return trim.split("\\s+").length; // separate string around spaces
+    }
 //    public static Form retrieveDocuments(String query_string) throws IOException {
 //        HashMap<String, String> out = QuestionPreprocessing.preProcessInput(query_string);
 //
-//        String normalizedQuery = out.get(ConfigP.Keys.NormalizedText);
+//        String normalizedQuery = out.get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef);
 //        Form form = new Form(query_string);
 //        form.setNormalizedText(normalizedQuery);
 //        ArrayList<Website_Document> website_documents = DocumentRetrieval.getLinksOfAllWebsitesByQuery(form.text, ConfigM.searchNumOfPages);
