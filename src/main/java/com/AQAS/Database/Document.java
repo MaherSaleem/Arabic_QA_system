@@ -296,8 +296,8 @@ public class Document implements Comparable<Document> {
         }
     }
 
-    public void log(String filePath){
-        String fileName = filePath+ "/" + this.getDocName() + ".log";
+    public void log(String fileName){
+//        String fileName = filePath+ "/" + this.getDocName() + ".log";
         try {
             Logger.getInstance().log(fileName, "Link: "+this.link);
             Logger.getInstance().log(fileName, "URL Rank: "+this.urlRank);
@@ -312,7 +312,7 @@ public class Document implements Comparable<Document> {
 
     public void logSegments(String folderPath) {
         for (Segment segment : this.segments) {
-            segment.log(folderPath);
+            segment.log(folderPath+".log");
         }
     }
 

@@ -302,15 +302,15 @@ public class Form {
             document.setSegmentsOrder();
 
             if (ConfigM.VERBOSE_LOG) {
-                document.log(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/" + document.getDocName());
-                document.logSegments(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/" + document.getDocName() + "/BEFORE_FILTRATION");
+                document.log(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/" + document.getDocName() + "/" + document.getDocName() + ".log");
+                document.logSegments(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/" + document.getDocName() + "/" + document.getDocName() + "_segments_BEFORE_FILTRATION");
             }
 
 
             document.removeIrrelevantSegments();
 
             if (ConfigM.VERBOSE_LOG) {
-                document.logSegments(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/" + document.getDocName() + "/AFTER_FILTRATION");
+                document.logSegments(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/" + document.getDocName() + "/" + document.getDocName() + "_segments_AFTER_FILTRATION");
             }
 
             //Get top N segments according to their order in the document
@@ -357,9 +357,9 @@ public class Form {
         Collections.sort(tempTopSegments);
         this.setTopSegmentsByRank(tempTopSegments);//best segments in all documents
 
-        if(ConfigM.VERBOSE_LOG){
-            for (Segment segment: this.topSegmentsByRank) {
-                segment.log(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/TOP_SEGMENTS_BY_RANK");
+        if (ConfigM.VERBOSE_LOG) {
+            for (Segment segment : this.topSegmentsByRank) {
+                segment.log(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/TOP_SEGMENTS_BY_RANK/" + segment.getSerialNum() + ".log");
             }
         }
 
@@ -367,9 +367,9 @@ public class Form {
         Collections.sort(tempTopSegmentsByOrder);
         this.setTopSegmentsByOrder(tempTopSegmentsByOrder);
 
-        if(ConfigM.VERBOSE_LOG){
-            for (Segment segment: this.topSegmentsByOrder) {
-                segment.log(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/TOP_SEGMENTS_BY_ORDER");
+        if (ConfigM.VERBOSE_LOG) {
+            for (Segment segment : this.topSegmentsByOrder) {
+                segment.log(ConfigM.LogFolders.PASSAGE_EXTRACTION + "/TOP_SEGMENTS_BY_ORDER/" + segment.getSerialNum() + ".log");
             }
         }
 
@@ -473,7 +473,7 @@ public class Form {
 
     public void logDocuments(String folderPath) {
         for (Document document : this.documents) {
-            document.log(folderPath);
+            document.log(folderPath + "/" + document.getDocName() + ".log");
         }
 
     }
