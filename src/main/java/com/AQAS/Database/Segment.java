@@ -198,8 +198,8 @@ return ordered document depending on content rank, Sorting descending
         return diff != 0 ? (diff > 0 ? -1 : 1) : 0;
     }
 
-    public void log(String filePath) {
-        String fileName = filePath+ "/" + this.getSerialNum() + ".log";
+    public void log(String fileName) {
+//        String fileName = filePath+ "/" + this.getSerialNum() + ".log";
 
         try {
             Logger.getInstance().log(fileName, "Segment Types: " + this.getSegmentTypes());
