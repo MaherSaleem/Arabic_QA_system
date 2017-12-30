@@ -227,6 +227,9 @@ public class Document implements Comparable<Document> {
 
                 } else if (state == ConfigPS.STATE_NOT_ENOUGH) {
                     endIndex = i;
+                    if (!PassageSegmentation.isEnoughSegment(startIndex, endIndex)){
+                        continue;
+                    }
                     state = ConfigPS.STATE_END;
                 }
                 String segmentString = "";
