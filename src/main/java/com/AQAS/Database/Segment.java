@@ -1,6 +1,9 @@
 package com.AQAS.Database;
 
+import com.AQAS.Document_ranking.ConfigDR;
 import com.AQAS.Document_ranking.DocumentRanking;
+import com.AQAS.Document_ranking.HelpersDR;
+import com.AQAS.main.ConfigM;
 import com.AQAS.main.HelpersM;
 import com.AQAS.main.Logger;
 import com.AQAS.passages_segmentation.ConfigPS;
@@ -8,6 +11,7 @@ import com.AQAS.question_type.ConfigQT;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Segment implements Comparable<Segment> {
@@ -81,7 +85,7 @@ public class Segment implements Comparable<Segment> {
         double keyPhrasesScore = 0;
         double documentRankScore = 0;
         //if segment doesnt contain the question type => rank = 0
-        double rank = 0;
+        double rank;
         if (questionTypeScore == 0) {
             rank = 0;
         } else {
@@ -91,31 +95,38 @@ public class Segment implements Comparable<Segment> {
         }
 
 
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter(new FileOutputStream(
-                    new File("out.txt"),
-                    true /* append = true */));
-            writer.println("Quuestion type Score: " + questionTypeScore);
-            writer.println("keyphrase  Score: " + keyPhrasesScore);
-            writer.println("documentRank  Score: " + documentRankScore);
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if(ConfigM.VERBOS){
+            System.out.println("Quuestion type Score: " + questionTypeScore);
+            System.out.println("keyphrase  Score: " + keyPhrasesScore);
+            System.out.println("documentRank  Score: " + documentRankScore);
         }
-        writer.close();
-        System.out.println("Quuestion type Score: " + questionTypeScore);
-        System.out.println("keyphrase  Score: " + keyPhrasesScore);
-        System.out.println("documentRank  Score: " + documentRankScore);
 
-//        double rank = ConfigPS.weights.A * questionTypeScore + ConfigPS.weights.B * keyPhrasesScore + ConfigPS.weights.C * documentRankScore;
 
         this.setRank(rank);
     }
 
     public double findKeyPhrasesScore(String query) throws IOException {
 
-        return DocumentRanking.getDocumentRank(this.text, query);
+        String[] queryKeyPhrasesWithSynonyms = Form.getInstance().getKeyPhrases();
+
+        HashMap<String, Double> keyPhrasesFrequencies = HelpersDR.getWordsFreqInDoc(queryKeyPhrasesWithSynonyms, this.text);
+        double cosineSimilarity = HelpersDR.cosineSimilarity(query, this.text);
+
+        double keyPhrasesScore = 0;
+        for (String keyPhrase : queryKeyPhrasesWithSynonyms) {
+
+            double keyPhraseScore = 0;
+            double keyPhraseFreq = keyPhrasesFrequencies.get(keyPhrase);
+            if(keyPhraseFreq > 0){
+                int keyPhraseLength = HelpersM.getSentenceWordsCount(keyPhrase);
+                double properNameScore = DocumentRanking.getProperNameScore(keyPhrase);
+                keyPhraseScore =  Math.sqrt(keyPhraseLength) * properNameScore;
+            }
+            keyPhrasesScore += keyPhraseScore;
+        }
+
+        return ConfigDR.a * keyPhrasesScore + ConfigDR.b * cosineSimilarity;
     }
 
     //QT_NUMERIC = 0;

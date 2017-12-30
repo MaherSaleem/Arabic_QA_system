@@ -10,7 +10,7 @@ public class PassageSegmentation {
     }
 
     public static boolean isEnoughSegment(int startIndex, int endIndex) {
-        return startIndex - endIndex > ConfigPS.ENOUGH_THRESHOLD;
+        return  endIndex - startIndex > ConfigPS.ENOUGH_THRESHOLD;
     }
 
 }
