@@ -7,6 +7,7 @@ import com.AQAS.Database.HelpersDB;
 import com.AQAS.document_retrieval.DocumentRetrieval;
 import com.AQAS.question_processessing.ConfigP;
 import com.AQAS.question_processessing.QuestionPreprocessing;
+import com.AQAS.question_type.ConfigQT;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -89,7 +90,7 @@ public class ServerDriver {
             System.out.println("After sorting Documents: " + form);
         }
         if (ConfigM.VERBOSE_LOG) {
-            form.logDocuments(ConfigM.LogFolders.DOC_RETRIEVAL+"/BEFORE_FILTERING");
+            form.logDocuments(ConfigM.LogFolders.DOC_RETRIEVAL + "/BEFORE_FILTERING");
         }
 
         if (ConfigM.VERBOS) {
@@ -98,7 +99,7 @@ public class ServerDriver {
         form.removeIrrelevantDocuments();
 
         if (ConfigM.VERBOSE_LOG) {
-            form.logDocuments(ConfigM.LogFolders.DOC_RETRIEVAL+"/AFTER_FILTERING");
+            form.logDocuments(ConfigM.LogFolders.DOC_RETRIEVAL + "/AFTER_FILTERING");
         }
 
         if (ConfigM.VERBOS) {
@@ -111,9 +112,10 @@ public class ServerDriver {
         }
         form.extractAnswer();
 
+
         if (ConfigM.VERBOSE_LOG) {
             for (Answer answer : form.getAnswers()) {
-                answer.log(ConfigM.LogFolders.ANSWER_EXTRACTION );
+                answer.log(ConfigM.LogFolders.ANSWER_EXTRACTION);
             }
         }
 //        System.out.println("After Remove irrelevant: " + form);
@@ -127,7 +129,7 @@ public class ServerDriver {
 
         try {
             //writing json to file
-            outJsonFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8));
+            outJsonFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName+".out"), StandardCharsets.UTF_8));
             outJsonFile.write(getJson(questionQuery));
 //            out.write(questionQuery);
         } catch (IOException e) {

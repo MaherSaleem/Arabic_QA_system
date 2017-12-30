@@ -30,7 +30,7 @@ public class Form {
     public int question_id;
     public String text;
     public int question_type;
-    public String normalizedText;
+    public String normalizedText;//NormalizedText_WithoutStoppingWords_WithoutALT3reef
     public ArrayList<Document> documents = new ArrayList<Document>();
     private String[] keyPhrases = null;
     public ArrayList<Segment> topSegmentsByRank = new ArrayList<>();// top segments by rank

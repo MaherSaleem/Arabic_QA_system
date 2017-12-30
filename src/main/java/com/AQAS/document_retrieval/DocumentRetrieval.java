@@ -60,8 +60,15 @@ public class DocumentRetrieval {
             if (driver instanceof JavascriptExecutor) {
                 js = (JavascriptExecutor) driver;
                 js.executeScript("var element = document.querySelector(\".article-top\");if (element)\n" + "    element.parentNode.removeChild(element);");
+                js.executeScript("var element = document.querySelector(\".article-relations\");if (element)\n" + "    element.parentNode.removeChild(element);");
                 js.executeScript("var element = document.querySelector(\".article-bottom\");if (element)\n" + "    element.parentNode.removeChild(element);");
                 js.executeScript("var element = document.querySelector(\".jump-links\");if (element)\n" + "    element.parentNode.parentNode.removeChild(element.parentNode);");
+                js.executeScript("var element = document.querySelector(\"table\");if (element)\n" + "    element.parentNode.parentNode.removeChild(element.parentNode);");
+
+
+                js.executeScript("var element = document.querySelector(\".toc\");if (element)\n" + "    element.parentNode.removeChild(element);");
+                js.executeScript("var element = document.querySelector(\".ltr\");if (element)\n" + "    element.parentNode.removeChild(element);");
+                js.executeScript("var element = document.querySelector(\".references\");if (element)\n" + "    element.parentNode.removeChild(element);");
             }
         } catch (Exception e) {
             e.printStackTrace();
