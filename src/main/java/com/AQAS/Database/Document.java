@@ -238,11 +238,19 @@ public class Document implements Comparable<Document> {
                 }
 
                 if (state == ConfigPS.STATE_LAST_SENTENCE) {
-                    int LastSegmentIndex = segments.size() - 1;
-                    segmentString += documentSentences[sentencesSize - 1];
-                    Segment segment =  new Segment(segments.get(LastSegmentIndex).text + ". " + segmentString);
-                    segment.setSerialNum(this.getDocName()+"__"+count++);
-                    segments.set(LastSegmentIndex,segment);
+                    try{
+                        int LastSegmentIndex = segments.size() - 1;
+                        segmentString += documentSentences[sentencesSize - 1];
+                        Segment segment =  new Segment(segments.get(LastSegmentIndex).text + ". " + segmentString);
+                        segment.setSerialNum(this.getDocName()+"__"+count++);
+                        segments.set(LastSegmentIndex,segment);
+                    }
+                    catch (Exception e){
+                        Segment segment = new Segment("لا يتم العذور على اي جدواب في هذا الملف");
+                        segment.setSerialNum(this.getDocName()+"__"+count++);
+                        segments.add(segment);
+
+                    }
                 } else {
                     if(ConfigM.VERBOS){
                         System.out.println(segments.size());
