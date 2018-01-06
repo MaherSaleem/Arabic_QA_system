@@ -86,13 +86,18 @@ public class Segment implements Comparable<Segment> {
         double documentRankScore = 0;
         //if segment doesnt contain the question type => rank = 0
         double rank;
-        if (questionTypeScore == 0) {
-            rank = 0;
-        } else {
-            keyPhrasesScore = findKeyPhrasesScore(form.text);
-            documentRankScore = document.overAllRank();
-            rank = ConfigPS.weights.A * questionTypeScore + ConfigPS.weights.B * keyPhrasesScore + ConfigPS.weights.C * documentRankScore;
-        }
+//        if (questionTypeScore == 0) {
+//            rank = 0;
+//        } else {
+//            keyPhrasesScore = findKeyPhrasesScore(form.text);
+//            documentRankScore = document.overAllRank();
+//            rank = ConfigPS.weights.A * questionTypeScore + ConfigPS.weights.B * keyPhrasesScore + ConfigPS.weights.C * documentRankScore;
+//        }
+
+        keyPhrasesScore = findKeyPhrasesScore(form.text);
+        documentRankScore = document.overAllRank();
+        rank = ConfigPS.weights.A * questionTypeScore + ConfigPS.weights.B * keyPhrasesScore + ConfigPS.weights.C * documentRankScore;
+
 
 
 
