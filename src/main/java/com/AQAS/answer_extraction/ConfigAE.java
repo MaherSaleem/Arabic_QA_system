@@ -6,7 +6,7 @@ public final  class ConfigAE {
     public static final int TOP_SEGMENTS_BY_ORDER = 3;
 
     public  interface topN{
-        int LIST = 10;//
+        int LIST = 5;//
         int DEFINITION = 5;//
         int NUMERIC = 5;//
     }

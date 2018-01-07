@@ -4,6 +4,7 @@ import com.AQAS.Database.Answer;
 import com.AQAS.Database.Document;
 import com.AQAS.Database.Form;
 import com.AQAS.Database.HelpersDB;
+import com.AQAS.Document_ranking.HelpersDR;
 import com.AQAS.document_retrieval.DocumentRetrieval;
 import com.AQAS.question_processessing.ConfigP;
 import com.AQAS.question_processessing.QuestionPreprocessing;
@@ -130,7 +131,7 @@ public class ServerDriver {
         try {
             //writing json to file
             outJsonFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName+".out"), StandardCharsets.UTF_8));
-            outJsonFile.write(getJson(questionQuery));
+            outJsonFile.write(getJson(form));
 //            out.write(questionQuery);
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
@@ -141,10 +142,10 @@ public class ServerDriver {
         }
     }
 
-    public static String getJson(String query) {
+    public static String getJson(Form form) {
+
 
         ArrayList<Answer> answers = Form.getInstance().getAnswers();
-
 //        String[] answers = new String[]{"maher", "saleem", "abd", "khdeir"};
         String ret = "{\"answers\":[";
 
@@ -156,7 +157,8 @@ public class ServerDriver {
                 ret += String.format("\"%s\",", answers.get(i).text.replace("\"", "'"));
             }
         }
-        ret += String.format("],\"query\":\"%s\"}", query);
+        ret += String.format("],\"query\":\"%s\"", form.text);
+        ret += String.format(",\"question_type\":\"%s\"}", ConfigQT.QT_texts[form.question_type].toLowerCase());
 
         System.out.println(ret);
         return ret;

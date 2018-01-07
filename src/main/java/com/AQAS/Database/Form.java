@@ -10,6 +10,7 @@ import com.AQAS.main.ConfigM;
 import com.AQAS.main.HelpersM;
 import com.AQAS.main.Logger;
 import com.AQAS.question_processessing.ConfigP;
+import com.AQAS.question_processessing.QuestionPreprocessing;
 import com.AQAS.question_type.ConfigQT;
 import com.AQAS.synonyms.FindSynonyms;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -111,7 +112,7 @@ public class Form {
         String[] queryKeyPhrases = HelpersKE.getKeyPhrases(this.normalizedText);
         String[] stemmedWords = this.getPreprocessed_query().get(ConfigP.Keys.StemmedText).split("\\s");
         if (ConfigM.VERBOSE_LOG) {
-            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases.log", "Keyphrases List" +  Arrays.toString(queryKeyPhrases) + "\n====================================");
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases.log", "Keyphrases List" + Arrays.toString(queryKeyPhrases) + "\n====================================");
         }
         if (ConfigM.VERBOS) {
             System.out.println("Keyphrases List is :" + Arrays.toString(queryKeyPhrases));
@@ -128,7 +129,7 @@ public class Form {
                 Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases.log", "Synonyms for keyphrase \"" + queryKeyPhrase + "\" are: " + Arrays.asList(keyPhraseSynonyms));
 
             }
-            if (HelpersM.getSentenceWordsCount(queryKeyPhrase) > 1){
+            if (HelpersM.getSentenceWordsCount(queryKeyPhrase) > 1) {
                 queryStemmedWordsWithKeyphrasesSynonyms.add(queryKeyPhrase);
             }
             queryStemmedWordsWithKeyphrasesSynonyms.addAll(Arrays.asList(keyPhraseSynonyms));
@@ -136,7 +137,7 @@ public class Form {
         queryStemmedWordsWithKeyphrasesSynonyms.addAll((Arrays.asList(stemmedWords)));
         queryKeyPhrases = HelpersM.removeStringDuplicates(queryStemmedWordsWithKeyphrasesSynonyms.toArray(new String[queryStemmedWordsWithKeyphrasesSynonyms.size()]));
         if (ConfigM.VERBOSE_LOG) {
-            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases.log","==================================\nKey phrases with synonyms" + Arrays.toString(queryKeyPhrases));
+            Logger.getInstance().log(ConfigM.LogFolders.PREPROCESSING + "/keyphrases.log", "==================================\nKey phrases with synonyms" + Arrays.toString(queryKeyPhrases));
         }
         if (ConfigM.VERBOS) {
             System.out.println("==================================\nKey phrases with synonyms" + Arrays.toString(queryKeyPhrases));
@@ -428,26 +429,32 @@ public class Form {
                 break;
 
             case ConfigQT.QT_NUMERIC:
-                for (int i = 0; i < ConfigAE.topN.NUMERIC; i++) {
+                int topNNumeric = ConfigAE.topN.NUMERIC;
+                for (int i = 0; i < topNNumeric; i++) {
 
                     try {
                         Segment segment = this.topSegmentsByRank.get(i);
                         String segmentText = segment.getText();
-                        String[] segmentSentences = segmentText.split("\\.");
+                        String[] segmentSentences = segmentText.trim().split("[:\\n\\.]");
 
                         Answer bestAnswer = new Answer();
                         double bestCosine = -1;
                         for (String sentence : segmentSentences) {
                             //Answer dummyAnswer = Answer(sentence);
                             if (HelpersM.regexCount("\\d+", sentence) > 1) {// the sentence has a number
-                                double cosSim = HelpersDR.cosineSimilarity(sentence, this.text);
+                                double cosSim = HelpersDR.cosineSimilarity(QuestionPreprocessing.preProcessInput(sentence).get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef), String.join(" ", this.getKeyPhrases()));
                                 if (cosSim > bestCosine) {
                                     bestAnswer.setText(sentence);
                                     bestAnswer.setRank(cosSim);
+                                    bestCosine = cosSim;
                                 }
                             }
                         }
-                        this.answers.add(bestAnswer);
+                        if (bestCosine == -1) {
+                            topNNumeric += 1;
+                        } else {
+                            this.answers.add(bestAnswer);
+                        }
 
                     } catch (Exception e) {
                         break;

@@ -246,10 +246,9 @@ public class Document implements Comparable<Document> {
                         segments.set(LastSegmentIndex,segment);
                     }
                     catch (Exception e){
-                        Segment segment = new Segment("لا يتم العذور على اي جدواب في هذا الملف");
-                        segment.setSerialNum(this.getDocName()+"__"+count++);
-                        segments.add(segment);
-
+//                        Segment segment = new Segment("لا يتم العثور على اي جواب في هذا الملف");
+//                        segment.setSerialNum(this.getDocName()+"__"+count++);
+//                        segments.add(segment);
                     }
                 } else {
                     if(ConfigM.VERBOS){

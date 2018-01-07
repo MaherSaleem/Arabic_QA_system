@@ -51,8 +51,7 @@ public class DocumentRetrieval {
             driver.get(URL);
         }
         try {
-            WebElement showMoreButton = driver.findElement(By.className("showMore"));
-            showMoreButton.click();
+            System.out.println("Doc");
         } catch (Exception e) {
         }
         try {
