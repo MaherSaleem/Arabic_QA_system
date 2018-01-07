@@ -179,4 +179,52 @@ class Google extends Website {
         }
         return links;
     }
+}class Mawdoo3 extends Website {
+
+    /**
+     * @param websiteName      :the website's name
+     * @param searchLink       :the link that is used to make the search inside the website
+     * @param pageVariableName : The variable name that is used within the search to specify which page from the search result to use
+     * @param selector         : used to get the div that contains the links of the search result
+     * @param searchPageOffset :  is used to determine the start page of a website search results
+     * @param contentSelector
+     */
+    public Mawdoo3(String websiteName, String searchLink, String pageVariableName, String selector, int searchPageOffset, String contentSelector) {
+        super(websiteName, searchLink, pageVariableName, selector, searchPageOffset, contentSelector);
+
+    }
+
+    public String generateSearchLink(String searchQuery, int pageNumber) throws UnsupportedEncodingException {
+        return String.format(this.searchLink, URLEncoder.encode(searchQuery, "UTF-8"), pageNumber * 10 + 1);
+    }
+
+    @Override
+    public ArrayList<String> _extractDocumentsLinksForOnePage(String generatedSearchURL) throws ParseException {
+
+        ArrayList<String> links = new ArrayList<String>();
+
+        //https://www.mkyong.com/java/json-simple-example-read-and-write-json/
+        JSONParser parser = new JSONParser();
+        driver.get(generatedSearchURL);
+
+
+        //the json object is wrapped with <pre></pre> tag, so we get the content from it.
+        String jsonResponse = driver.findElement(new By.ByTagName("pre")).getText();
+        Object obj = parser.parse(jsonResponse);
+        JSONObject jsonObject = (JSONObject) obj;
+        JSONArray res = (JSONArray) jsonObject.get("results");
+
+        Iterator<JSONObject> iterator = res.iterator();
+        while (iterator.hasNext()) {
+            JSONObject tmp = iterator.next();
+            String link = (String) tmp.get("unescapedUrl");
+
+            //use JAVA 8 to make this valid(press on error message to solve the problem)
+            //remove unwanted websites
+            if (Arrays.stream(ConfigD.unwantedWebsites).parallel().noneMatch(link::contains)) {
+                links.add(link);
+            }
+        }
+        return links;
+    }
 }
