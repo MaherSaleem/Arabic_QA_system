@@ -265,7 +265,14 @@ public class Form {
         } else if (ConfigDR.THRESHOLD_SOURCE == ConfigDR.STATISTICAL_THRESHOLD) {
             double avg = getDocumentsRanksAvg();
             double standardDeviation = getDocumentsRankStandardDeviation();
-            if (avg <= standardDeviation) {
+            try {
+                Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/threshold.log", "average:\n" + avg);
+                Logger.getInstance().log(ConfigM.LogFolders.DOC_RETRIEVAL + "/threshold.log", "standard deviation:\n" + standardDeviation);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (Math.abs(avg - standardDeviation) < 1 || avg <= standardDeviation) {
                 return avg;
             } else {
                 return avg - standardDeviation;
@@ -430,6 +437,7 @@ public class Form {
 
             case ConfigQT.QT_NUMERIC:
                 int topNNumeric = ConfigAE.topN.NUMERIC;
+                ArrayList<Answer> extractedAnswers = new ArrayList<>();
                 for (int i = 0; i < topNNumeric; i++) {
 
                     try {
@@ -437,30 +445,33 @@ public class Form {
                         String segmentText = segment.getText();
                         String[] segmentSentences = segmentText.trim().split("[:\\n\\.]");
 
-                        Answer bestAnswer = new Answer();
+//                        Answer bestAnswer = new Answer();
                         double bestCosine = -1;
                         for (String sentence : segmentSentences) {
                             //Answer dummyAnswer = Answer(sentence);
                             if (HelpersM.regexCount("\\d+", sentence) > 1) {// the sentence has a number
                                 double cosSim = HelpersDR.cosineSimilarity(QuestionPreprocessing.preProcessInput(sentence).get(ConfigP.Keys.NormalizedText_WithoutStoppingWords_WithoutALT3reef), String.join(" ", this.getKeyPhrases()));
                                 if (cosSim > bestCosine) {
-                                    bestAnswer.setText(sentence);
-                                    bestAnswer.setRank(cosSim);
+//                                    bestAnswer.setText(sentence);
+//                                    bestAnswer.setRank(cosSim);
                                     bestCosine = cosSim;
                                 }
+                                extractedAnswers.add(new Answer(sentence, cosSim));
                             }
                         }
-                        if (bestCosine == -1) {
+                        if (bestCosine <= 0) {
                             topNNumeric += 1;
-                        } else {
-                            this.answers.add(bestAnswer);
                         }
+//                        else {
+//                            this.answers.add(bestAnswer);
+//                        }
 
                     } catch (Exception e) {
                         break;
                     }
 
                 }
+                this.answers = extractedAnswers;
                 Collections.sort(this.answers);
                 break;
 

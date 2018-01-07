@@ -36,22 +36,22 @@ public class DocumentRetrieval {
                 e.printStackTrace();
             }
         }
-        return removeDuplicatesFromDocumentLinks(DocumentSLinksWithContentSelector,ConfigD.websitesToremoveDuplicatesFrom);
+        return removeDuplicatesFromDocumentLinks(DocumentSLinksWithContentSelector, ConfigD.websitesToremoveDuplicatesFrom);
     }
 
 
     /**
      * @param URL
      */
-    public static String retrieveDocumentText(String URL , String contentSelector) throws IOException {
+    public static String retrieveDocumentText(String URL, String contentSelector) throws IOException {
         try {
             driver.get(URL);
-        }catch (Exception e){
+        } catch (Exception e) {
             openWebDriver();
             driver.get(URL);
         }
         try {
-            System.out.println("Doc");
+            System.out.println(URL);
         } catch (Exception e) {
         }
         try {
@@ -77,16 +77,21 @@ public class DocumentRetrieval {
 
         WebElement we;
         try {
-             we = driver.findElement(By.cssSelector(contentSelector));
-        }
-        catch (Exception e){
-            we = driver.findElement(By.tagName("body"));
+            we = driver.findElement(By.cssSelector(contentSelector));
+        } catch (Exception e) {
+            try {
+                we = driver.findElement(By.tagName("body"));
+            } catch (Exception ex) {
+                we = null;
+            }
         }
 
-
-        String documentText = we.getText();
-        documentText = QuestionPreprocessing.preProcessDocument(documentText).get(ConfigP.Keys.NormalizedText_WithStoppingWords_WithAlT3reef_WithPunctuation);
-        return documentText;
+        if (we != null) {
+            String documentText = we.getText();
+            documentText = QuestionPreprocessing.preProcessDocument(documentText).get(ConfigP.Keys.NormalizedText_WithStoppingWords_WithAlT3reef_WithPunctuation);
+            return documentText;
+        }
+        return "";
 
     }
 
@@ -123,14 +128,13 @@ public class DocumentRetrieval {
                     System.out.println(text);
                 }
                 Document document = new Document(url, text, urlOrder);
-                document.setKeyPhases( HelpersKE.getKeyPhrases(text));
-                document.setDocName(website_document.getSourceWebsite()+"_"+urlOrder++);
+                document.setKeyPhases(HelpersKE.getKeyPhrases(text));
+                document.setDocName(website_document.getSourceWebsite() + "_" + urlOrder++);
                 documents.add(document);
             }
         }
         return documents;
     }
-
 
 
 }
