@@ -8,7 +8,7 @@ public final  class ConfigAE {
     public  interface topN{
         int LIST = 5;//
         int DEFINITION = 5;//
-        int NUMERIC = 5;//
+        int NUMERIC = 3;//
     }
 
 

@@ -21,6 +21,7 @@ public final class HelpersDR {
         double documentKeyPhasesSize = documentKeyPhases.length;
         HashMap<String, Double> wordFrequencies = new HashMap<String, Double>();
 
+
         for (String word : words) {
             Pattern pattern = Pattern.compile(word);
             Matcher matcher = pattern.matcher(document);
@@ -28,7 +29,7 @@ public final class HelpersDR {
             while (matcher.find())
                 count++;
 
-            wordFrequencies.put(word, count / Math.sqrt(documentKeyPhasesSize)); //Normalized freq
+            wordFrequencies.put(word, documentKeyPhasesSize == 0 ? 0 : count / Math.sqrt(documentKeyPhasesSize)); //Normalized freq
 //            int documentWordsCount = getSentenceWordsCount(document);
 //            wordFrequencies.put(word, count);
 
@@ -51,7 +52,6 @@ public final class HelpersDR {
         System.out.println("cosine similarity is : " + result);
         return result;
     }
-
 
 
 }
