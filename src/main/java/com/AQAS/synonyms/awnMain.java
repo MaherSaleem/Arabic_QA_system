@@ -12,7 +12,7 @@ public class awnMain {
 //        for(int i = 0; i< ItemID.size();i++){
 //            System.out.println("Item ID: " + ItemID.get(i) +" Item Name: " + awn.Get_Name_Of_Item_From_Item_Id(ItemID.get(i)));
 //        }
-        List<String> listWordId= awn.Get_List_Word_Id_From_Value("طرق");
+        List<String> listWordId= awn.Get_List_Word_Id_From_Value("اصابة");
         for(int i = 0; i< listWordId.size();i++){
             System.out.println("Word ID: " + listWordId.get(i) +" Word Value: " + awn.Get_Word_Value_From_Word_Id(listWordId.get(i)));
 //            List<List<String>> listOfForm=awn.Get_List_Of_Forms_From_Word_Id(listWordId.get(i));
